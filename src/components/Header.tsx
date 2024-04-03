@@ -17,7 +17,7 @@ export default function Header() {
 					WOLFEY
 				</h1>
 			</Link>
-			<Link href="https://github.com/WoIfey" target="_blank">
+			<Link href="https://github.com/WoIfey/woifey.github.io" target="_blank">
 				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110">
 					GITHUB
 				</h1>
