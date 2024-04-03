@@ -25,7 +25,7 @@ export default function Header() {
 			<div className="md:hidden block">
 				<button className="m-2" onClick={smooth}>
 					<Image
-						src="arrow-down.svg"
+						src="/arrow-down.svg"
 						alt="Down"
 						height={32}
 						width={32}
