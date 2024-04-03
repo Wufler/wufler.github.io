@@ -1,9 +1,6 @@
 'use client'
-
-import { refresh } from '@/app/actions'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
 
 export default function Header() {
 	function smooth() {
@@ -12,10 +9,6 @@ export default function Header() {
 			element.scrollIntoView({ behavior: 'smooth' })
 		}
 	}
-
-	useEffect(() => {
-		refresh()
-	}, [])
 
 	return (
 		<div className="text-center bg-gradient-to-r from-orange-500 via-orange-500 to-yellow-500 h-full w-full md:w-[45%] lg:w-[35%] flex flex-col justify-center md:justify-evenly items-center">
