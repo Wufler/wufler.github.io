@@ -1,7 +1,9 @@
 'use client'
 
+import { refresh } from '@/app/actions'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 export default function scroll() {
 	function smooth() {
@@ -10,15 +12,20 @@ export default function scroll() {
 			element.scrollIntoView({ behavior: 'smooth' })
 		}
 	}
+
+	useEffect(() => {
+		refresh()
+	}, [])
+
 	return (
 		<div className="text-center bg-gradient-to-r from-orange-500 via-orange-500 to-yellow-500 h-full w-full md:w-[45%] lg:w-[35%] flex flex-col justify-center md:justify-evenly items-center">
 			<Link href="https://github.com/WoIfey" target="_blank">
-				<h1 className="text-[5rem] md:text-[4rem] xl:text-[5rem] px-16 md:p-5 drop-shadow-xl text-orange-100 transition-all duration-300 ease-in-out transform hover:scale-110">
+				<h1 className="text-[4rem] xl:text-[5rem] px-16 md:p-5 drop-shadow-xl text-orange-100 transition-all duration-300 ease-in-out transform hover:scale-110">
 					WOLFEY
 				</h1>
 			</Link>
 			<Link href="https://github.com/WoIfey" target="_blank">
-				<h1 className="text-[5rem] md:text-[4rem] xl:text-[5rem] px-16 md:p-5 drop-shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110">
+				<h1 className="text-[4rem] xl:text-[5rem] px-16 md:p-5 drop-shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110">
 					GITHUB
 				</h1>
 			</Link>
