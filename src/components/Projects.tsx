@@ -14,44 +14,43 @@ interface item {
 }
 
 export default function Projects({ data }: any) {
+	const [isLoading, setIsLoading] = useState(true)
+
 	useEffect(() => {
-		refresh()
+		refresh().then(() => {
+			if (data) {
+				setIsLoading(false)
+			}
+		})
 	}, [])
 
+	if (isLoading) {
+		return <Loading />
+	}
 	return (
-		<div
-			id="projects"
-			className="h-dvh w-full md:w-[55%] lg:w-[65%] flex flex-col bg-[#1b1b1b]"
-		>
-			<div className="bg-[#2c2c2c] p-5 w-full">
-				<h1 className="text-[3.5rem] md:text-[3.5rem] xl:text-[4rem] text-center font-source">
-					PROJECTS
-				</h1>
-			</div>
-			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 pb-4 md:pb-0 font-source overflow-y-auto overflow-x-hidden mx-4">
-				{data.map((projects: item) => (
-					<div
-						key={projects.id}
-						className="group h-[250px] md:h-[200px] mx-8 my-8 transition-all duration-300 ease-in-out transform hover:scale-105 hover:px-6 hover:py-8"
-					>
-						<p className="text-xl md:text-2xl mb-1.5 text-center uppercase absolute top-4 left-4 bg-slate-600 transition-all ease-in-out delay-75 group-hover:text-xl group-hover:bg-slate-700 shadow-xl rounded-lg px-1">
-							{projects.title}
-						</p>
-						<p className="text-gray-300 text-[13px] md:text-[13px] uppercase absolute -bottom-6 group-hover:bottom-2 group-hover:right-6 group-hover:md:right-0 md:bottom-2 right-0 group-hover:opacity-100 opacity-100 md:opacity-0 transition-all ease-in-out delay-75">
-							{projects.description}
-						</p>
-						<Link href={projects.href} target="_blank">
-							<Image
-								src={projects.img}
-								height={1080}
-								width={720}
-								alt={projects.title}
-								className="rounded-xl bg-cover bg-no-repeat w-full h-full object-cover group-hover:border-slate-700 group-hover:border-4 transition-all ease-in-out delay-75 border-2 border-slate-400"
-							/>
-						</Link>
-					</div>
-				))}
-			</div>
+		<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 pb-4 pt-4 md:pb-0 font-source overflow-y-auto overflow-x-hidden xl:px-4">
+			{data.map((projects: item) => (
+				<div
+					key={projects.id}
+					className="group h-[170px] sm:h-[250px] md:h-[170px] mx-8 my-8 transition-all duration-200 ease-in-out transform hover:scale-105 hover:px-4 hover:py-6"
+				>
+					<p className="break-all truncate max-w-52 sm:max-w-64 text-xl md:text-2xl mb-1.5 text-center uppercase absolute group-hover:top-4 group-hover:left-0 group-hover:text-black -top-4 left-4 bg-slate-600 transition-all ease-in-out duration-200 group-hover:text-xl group-hover:bg-slate-300 shadow-xl rounded-lg px-1">
+						{projects.title}
+					</p>
+					<p className="-z-10 break-all truncate sm:max-w-72 max-w-60 text-gray-300 text-sm uppercase absolute -bottom-6 group-hover:bottom-0 group-hover:right-4 group-hover:md:right-0 md:bottom-2 right-0 group-hover:opacity-100 opacity-100 md:opacity-0 transition-all ease-in-out duration-200 md:delay-100">
+						{projects.description}
+					</p>
+					<Link href={projects.href} target="_blank">
+						<Image
+							src={projects.img}
+							height={854}
+							width={480}
+							alt={projects.title}
+							className="rounded-xl bg-cover bg-no-repeat w-full h-full object-cover group-hover:border-slate-300 group-hover:border-4 transition-all ease-in-out duration-200 border-2 border-slate-600"
+						/>
+					</Link>
+				</div>
+			))}
 		</div>
 	)
 }

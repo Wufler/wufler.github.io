@@ -13,13 +13,13 @@ export default function Header() {
 	return (
 		<div className="text-center bg-gradient-to-r from-orange-500 via-orange-500 to-yellow-500 h-full w-full md:w-[45%] lg:w-[35%] flex flex-col justify-center md:justify-evenly items-center">
 			<Link href="https://github.com/WoIfey" target="_blank">
-				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl text-orange-100 transition-all duration-300 ease-in-out transform hover:scale-110">
-					WOLFEY
+				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl text-orange-100 transition-all duration-300 ease-in-out transform hover:scale-110 uppercase">
+					wolfey
 				</h1>
 			</Link>
 			<Link href="https://github.com/WoIfey/woifey.github.io" target="_blank">
-				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110">
-					GITHUB
+				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110 uppercase">
+					github
 				</h1>
 			</Link>
 			<button className="m-2 md:hidden block" onClick={smooth}>

@@ -8,12 +8,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
 	title: "Wolfey's Portfolio",
-	description: "Wolfey's Portfolio | Made with Next.js",
+	description: "Wolfey's Portfolio made with Next.js",
 	openGraph: {
 		title: "Wolfey's Portfolio",
-		description: "Wolfey's Portfolio | Made with Next.js",
+		description: 'Check out my stuff!',
 		url: 'https://woifey.vercel.app',
-		siteName: "Wolfey's Portfolio",
 		images: [
 			{
 				url: 'https://wolfey.s-ul.eu/fyJVE8c6',
