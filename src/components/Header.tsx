@@ -22,17 +22,15 @@ export default function Header() {
 					GITHUB
 				</h1>
 			</Link>
-			<div className="md:hidden block">
-				<button className="m-2" onClick={smooth}>
-					<Image
-						src="/arrow-down.svg"
-						alt="Down"
-						height={32}
-						width={32}
-						className="bg-orange-200 rounded-full p-2 w-12 h-12"
-					/>
-				</button>
-			</div>
+			<button className="m-2 md:hidden block" onClick={smooth}>
+				<Image
+					src="/arrow-down.svg"
+					alt="Down"
+					height={32}
+					width={32}
+					className="bg-orange-200 rounded-full p-2 w-12 h-12"
+				/>
+			</button>
 		</div>
 	)
 }
