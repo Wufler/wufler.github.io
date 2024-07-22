@@ -15,6 +15,7 @@ interface item {
 	img: string
 	new: boolean
 	updated: boolean
+	outdated: boolean
 	created: string
 	category: string
 }
@@ -57,13 +58,18 @@ export default function Projects({ data }: any) {
 								<p>{projects.title}</p>
 							</div>
 							{projects.new && (
-								<Badge className="h-6 bg-sky-400 text-black font-light text-sm pointer-events-none">
+								<Badge className="h-6 bg-sky-500 text-black font-light text-sm pointer-events-none">
 									New
 								</Badge>
 							)}
 							{projects.updated && (
-								<Badge className="h-6 bg-green-400 text-black font-light text-sm pointer-events-none">
+								<Badge className="h-6 bg-green-500 text-black font-light text-sm pointer-events-none">
 									Updated
+								</Badge>
+							)}
+							{projects.outdated && (
+								<Badge className="h-6 bg-red-500 text-black font-light text-sm pointer-events-none">
+									Outdated
 								</Badge>
 							)}
 						</div>
