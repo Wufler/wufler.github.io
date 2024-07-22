@@ -1,10 +1,11 @@
 import Header from '@/components/Header'
 import Projects from '@/components/Projects'
-import { getData } from '@/utils/handleDatabase'
+import Image from 'next/image'
+import { getData } from '@/server/db'
 
 export default async function Home() {
 	let data = await getData()
-	data.sort((a: any, b: any) => a.id - b.id)
+	data.sort((a: any, b: any) => b.id - a.id)
 	return (
 		<div className="h-dvh flex flex-wrap font-nunito text-white bg-[#1b1b1b]">
 			<Header />
@@ -12,10 +13,17 @@ export default async function Home() {
 				id="projects"
 				className="h-dvh w-full md:w-[55%] lg:w-[65%] flex flex-col bg-[#1b1b1b]"
 			>
-				<div className="bg-[#2c2c2c] p-5 w-full shadow-2xl">
-					<h1 className="text-[3rem] md:text-[3.5rem] xl:text-[4rem] text-center font-source uppercase tracking-wide">
-						projects
-					</h1>
+				<div className="bg-[#2c2c2c] p-5 w-full md:w-[55%] lg:w-[65%] shadow-2xl absolute z-10">
+					<div className="flex justify-center items-center gap-6 text-[3rem] md:text-[3.5rem] text-center font-source uppercase tracking-wide">
+						<Image
+							src={'/favicon.ico'}
+							width={64}
+							height={64}
+							alt="Icon"
+							className="size-16"
+						/>
+						<h1>projects</h1>
+					</div>
 				</div>
 				<Projects data={data} />
 			</div>
