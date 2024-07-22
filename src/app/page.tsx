@@ -5,7 +5,7 @@ import { getProjects } from '@/server/db'
 
 export default async function Home() {
 	let projects = await getProjects()
-
+	projects.sort((a: any, b: any) => b.id - a.id)
 	return (
 		<div className="h-dvh flex flex-wrap font-nunito text-white bg-[#1b1b1b]">
 			<Header />

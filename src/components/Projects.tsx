@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/context-menu'
 import { ClipboardCheckIcon, LinkIcon } from 'lucide-react'
 import { toast } from 'sonner'
+import { unstable_noStore } from 'next/cache'
 
 interface item {
 	id: number
@@ -28,12 +29,11 @@ interface item {
 }
 
 export default function Projects({ projects }: any) {
-	projects.sort((a: any, b: any) => b.id - a.id)
-	const [loading, setLoading] = useState(true)
+	/* const [loading, setLoading] = useState(true)
 	useEffect(() => {
 		setLoading(false)
-	}, [projects])
-
+	}, [projects]) */
+	unstable_noStore()
 	const copy = async (href: string) => {
 		try {
 			await navigator.clipboard.writeText(href)
@@ -51,9 +51,9 @@ export default function Projects({ projects }: any) {
 		}
 	}
 
-	if (loading) {
+	/* if (loading) {
 		return <Loading fullscreen={true} background={false} size={72} />
-	}
+	} */
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 pb-4 pt-32 sm:pt-36 md:pb-0 font-source overflow-y-auto overflow-x-hidden xl:px-4">
 			{projects.map((data: item, index: number) => (
