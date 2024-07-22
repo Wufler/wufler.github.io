@@ -1,11 +1,11 @@
 import Header from '@/components/Header'
 import Projects from '@/components/Projects'
 import Image from 'next/image'
-import { getData } from '@/server/db'
+import { getProjects } from '@/server/db'
 
 export default async function Home() {
-	let data = await getData()
-	data.sort((a: any, b: any) => b.id - a.id)
+	let projects = await getProjects()
+
 	return (
 		<div className="h-dvh flex flex-wrap font-nunito text-white bg-[#1b1b1b]">
 			<Header />
@@ -25,7 +25,7 @@ export default async function Home() {
 						<h1>projects</h1>
 					</div>
 				</div>
-				<Projects data={data} />
+				<Projects projects={projects} />
 			</div>
 		</div>
 	)

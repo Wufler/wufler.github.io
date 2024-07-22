@@ -22,7 +22,7 @@ export default function Header() {
 					github
 				</h1>
 			</Link>
-			<button className="m-2 md:hidden block" onClick={smooth}>
+			<button type="button" className="m-2 md:hidden block" onClick={smooth}>
 				<ArrowDown className="bg-orange-300 rounded-full p-2 size-12 text-black hover:bg-orange-200 transition-all duration-150 hover:scale-110" />
 			</button>
 		</div>
