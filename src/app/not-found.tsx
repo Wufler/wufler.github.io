@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { ArrowLeft } from 'lucide-react'
 
 export default function NotFound() {
 	return (
@@ -17,13 +18,7 @@ export default function NotFound() {
 							href={'/'}
 							className="rounded-md bg-orange-400 px-2 py-1 hover:bg-orange-500"
 						>
-							<Image
-								src="/arrow-down.svg"
-								alt="Down"
-								height={32}
-								width={32}
-								className="rotate-90 p-1"
-							/>
+							<ArrowLeft className="m-1" />
 						</Link>
 					</div>
 				</div>
