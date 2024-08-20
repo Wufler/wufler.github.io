@@ -19,7 +19,7 @@ export default async function Home() {
 							src={'/favicon.ico'}
 							width={64}
 							height={64}
-							alt="Icon"
+							alt="🦊"
 							className="size-16"
 						/>
 						<h1>projects</h1>
