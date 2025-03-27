@@ -84,10 +84,6 @@ export default function Menu({
 		projectSound?.play()
 	}
 
-	const handleToggleFullscreen = () => {
-		setIsFullscreen(prev => !prev)
-	}
-
 	const handleFullscreenChange = (newFullscreenState: boolean) => {
 		setIsFullscreen(newFullscreenState)
 

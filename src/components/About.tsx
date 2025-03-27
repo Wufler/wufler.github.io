@@ -34,7 +34,7 @@ export default function About({
 			content: (
 				<div className="text-white space-y-6 pb-12">
 					<p className="leading-relaxed text-lg">
-						Hi! I'm Philip Huynh, a full-stack developer. I make some fun things.
+						Hi! I&apos;m Philip Huynh, a full-stack developer. I make some fun things.
 					</p>
 
 					<h3 className="text-[#dfc931] font-bold text-xl mt-4 mb-4">

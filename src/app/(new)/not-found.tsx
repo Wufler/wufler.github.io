@@ -14,7 +14,7 @@ export default function NotFound() {
 					</h1>
 					<div className="h-1 w-20 mx-auto bg-orange-400 mb-6 rounded-full"></div>
 					<p className="mb-8 text-lg leading-7 text-gray-300">
-						The page you're looking for seems to have dived somewhere else.
+						The page you&apos;re looking for seems to have dived somewhere else.
 					</p>
 					<div className="flex items-center justify-center gap-x-4">
 						<Link
