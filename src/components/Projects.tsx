@@ -1,125 +1,409 @@
 'use client'
-import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
-import { formatDistanceToNowStrict } from 'date-fns'
-import {
-	ContextMenu,
-	ContextMenuContent,
-	ContextMenuItem,
-	ContextMenuTrigger,
-} from '@/components/ui/context-menu'
-import { ClipboardCheckIcon, LinkIcon } from 'lucide-react'
-import { toast } from 'sonner'
-import { unstable_noStore as noStore } from 'next/cache'
-import React from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { ArrowLeft, ArrowRight, Maximize, Minimize, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
-interface Item {
-	id: number
-	title: string
-	description: string
-	href: string
-	img: string
-	new: boolean
-	updated: boolean
-	outdated: boolean
-	createdAt: Date
-	updatedAt: Date
-	category: string
-	visible: boolean
-}
+export default function Projects({
+	projects,
+	handleProjectClick,
+	playMoveSound,
+	onClose,
+	isFullscreen,
+	onFullscreenChange,
+}: Projects & { onClose: () => void }) {
+	const [selectedPage, setSelectedPage] = useState(0)
+	const [slideDirection, setSlideDirection] = useState(0)
+	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
+	const [localFullscreen, setLocalFullscreen] = useState(false)
 
-export default function Projects({ projects }: { projects: Item[] }) {
-	noStore()
+	useEffect(() => {
+		if (isFullscreen !== undefined) {
+			setLocalFullscreen(isFullscreen)
+		}
+	}, [isFullscreen])
 
-	const copy = async (href: string) => {
-		try {
-			await navigator.clipboard.writeText(href)
-			toast(
-				<div className="flex gap-2">
-					<ClipboardCheckIcon className="size-5" />
-					<span>Project copied to clipboard.</span>
-				</div>,
-				{
-					position: 'bottom-left',
-				}
-			)
-		} catch (error) {
-			console.error('Failed to copy project:', error)
+	useEffect(() => {
+		const nextAudio = new Audio('/next.wav')
+		nextAudio.volume = 0.4
+		setNextSound(nextAudio)
+	}, [])
+
+	useEffect(() => {
+		const handleResize = () => {
+			const isLargeScreen = window.innerWidth >= 1024
+			if (!isLargeScreen && !localFullscreen) {
+				setLocalFullscreen(true)
+				onFullscreenChange?.(true)
+			}
+		}
+
+		handleResize()
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [localFullscreen, onFullscreenChange])
+
+	const categories = [...new Set(projects.map(project => project.category))]
+	const pages = categories.map(category => {
+		const categoryProjects = projects.filter(
+			project => project.category === category && project.visible
+		)
+
+		return {
+			title: category.toUpperCase(),
+			subtitle: 'PROJECTS',
+			content: (
+				<div className="text-white">
+					<div
+						className={`grid ${
+							localFullscreen ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'
+						} gap-6 pb-12`}
+					>
+						{categoryProjects.map((project, index) => (
+							<motion.div
+								key={project.id}
+								initial={{ opacity: 0, y: 20 }}
+								animate={{
+									opacity: 1,
+									y: 0,
+									transition: {
+										delay: index * 0.1,
+										duration: 0.4,
+										ease: 'easeOut',
+									},
+								}}
+								className="transform-gpu overflow-visible"
+							>
+								<Link href={project.href} target="_blank" onClick={handleProjectClick}>
+									<div
+										className="bg-gradient-to-br from-[#dfc931]/90 to-[#e5b822]/90 p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg relative group will-change-transform"
+										onMouseEnter={() => playMoveSound()}
+									>
+										<div className="flex gap-2 items-center absolute left-4 -top-2 z-10">
+											{project.status &&
+												project.status.map((status, i) => (
+													<motion.div
+														key={i}
+														className={cn(
+															'text-white font-bold py-0.5 px-3 rounded-full shadow-sm',
+															status.toLowerCase() === 'new'
+																? 'bg-[#4CAF50]'
+																: status.toLowerCase() === 'updated'
+																? 'bg-[#009dff]'
+																: status.toLowerCase() === 'outdated'
+																? 'bg-[#f1381f]'
+																: 'bg-[#f1651f]'
+														)}
+													>
+														{status}
+													</motion.div>
+												))}
+										</div>
+
+										<div className="flex flex-col gap-4">
+											<div className="flex flex-row justify-between gap-4">
+												<div className="space-y-3 flex-1">
+													<h3 className="font-bold text-xl mb-2 text-gray-900">
+														{project.title}
+													</h3>
+													<p className="text-sm text-gray-800 leading-relaxed line-clamp-3">
+														{project.description}
+													</p>
+												</div>
+
+												<div className="flex-shrink-0">
+													<div className="relative overflow-hidden rounded-lg shadow-md transform transition-transform duration-200 group-hover:rotate-5 group-hover:scale-105">
+														<Image
+															src={project.img}
+															alt={project.title}
+															width={120}
+															height={120}
+															className="object-cover transition duration-300 group-hover:brightness-110"
+														/>
+													</div>
+												</div>
+											</div>
+
+											<div className="flex flex-wrap gap-2">
+												{project.tags.map((tag, index) => (
+													<span
+														key={index}
+														className="inline-block bg-[#dfc931] text-black text-xs font-semibold px-2 py-1 rounded-full"
+													>
+														{tag}
+													</span>
+												))}
+											</div>
+										</div>
+									</div>
+								</Link>
+							</motion.div>
+						))}
+					</div>
+				</div>
+			),
+		}
+	})
+
+	const handleNextPage = () => {
+		setSlideDirection(1)
+		setSelectedPage(prev => (prev + 1) % pages.length)
+		nextSound?.play()
+	}
+
+	const handlePrevPage = () => {
+		setSlideDirection(-1)
+		setSelectedPage(prev => (prev - 1 + pages.length) % pages.length)
+		nextSound?.play()
+	}
+
+	const currentPage = pages[selectedPage]
+
+	const toggleFullscreen = () => {
+		const newFullscreenState = !localFullscreen
+		setLocalFullscreen(newFullscreenState)
+		nextSound?.play()
+
+		if (onFullscreenChange) {
+			onFullscreenChange(newFullscreenState)
 		}
 	}
+
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 pb-4 pt-32 sm:pt-36 md:pb-0 font-source overflow-y-auto overflow-x-hidden xl:px-4">
-			{projects.map((project: Item, index: number) => (
-				<React.Fragment key={project.id}>
-					{!index || project.category !== projects[index - 1].category ? (
-						<div className="col-span-1 lg:col-span-2 2xl:col-span-3 sm:px-6 2xl:px-2 px-6">
-							<div className="flex w-full items-center space-x-4">
-								<p className="text-xl">{project.category}</p>
-								<div className="flex-1 border-b-2 rounded-xl border-gray-400"></div>
-							</div>
-						</div>
-					) : null}
-					{project.visible && (
-						<div className="group h-[170px] sm:h-[250px] md:h-[170px] mx-8 my-8 transition-all duration-200 ease-in-out transform hover:scale-105 hover:px-4 hover:py-6 mb-12 md:mb-8">
-							<div className="flex items-center gap-2 break-all truncate max-w-72 text-xl md:text-2xl mb-1.5 text-center uppercase absolute group-hover:top-4 group-hover:left-0 group-hover:text-black -top-4 left-4 transition-all ease-in-out duration-200">
-								<div className="bg-slate-600 transition-all ease-in-out duration-200 group-hover:text-xl group-hover:bg-slate-300 shadow-xl rounded-lg px-1">
-									<p>{project.title}</p>
-								</div>
-								{project.new && (
-									<Badge className="h-6 bg-sky-500 text-black font-light text-sm pointer-events-none">
-										New
-									</Badge>
-								)}
-								{project.updated && (
-									<Badge className="h-6 bg-green-500 text-black font-light text-sm pointer-events-none">
-										Updated
-									</Badge>
-								)}
-								{project.outdated && (
-									<Badge className="h-6 bg-red-500 text-black font-light text-sm pointer-events-none">
-										Outdated
-									</Badge>
-								)}
-							</div>
-							<div className="flex md:flex-row flex-col-reverse items-end gap-0 md:items-start md:gap-2 -z-10 break-all truncate max-w-72 text-gray-300 text-sm uppercase absolute -bottom-10 group-hover:-bottom-4 group-hover:md:bottom-0 group-hover:right-4 group-hover:md:right-0 md:bottom-2 right-0 group-hover:opacity-100 opacity-100 md:opacity-0 transition-all ease-in-out duration-200 md:delay-100">
-								<time
-									title={new Date(project.createdAt).toLocaleString()}
-									dateTime={new Date(project.createdAt).toLocaleString()}
-									className="text-xs text-gray-500"
-								>
-									{formatDistanceToNowStrict(new Date(project.createdAt), {
-										addSuffix: true,
-									})}
-								</time>
-								<p>{project.description}</p>
-							</div>
-							<Link href={project.href} target="_blank">
-								<ContextMenu>
-									<ContextMenuTrigger>
-										<Image
-											src={project.img}
-											height={854}
-											width={480}
-											alt={project.title}
-											className="rounded-xl bg-cover bg-no-repeat w-full h-full object-cover group-hover:border-slate-300 group-hover:border-4 transition-all ease-in-out duration-200 border-2 border-slate-600"
-										/>
-									</ContextMenuTrigger>
-									<ContextMenuContent>
-										<ContextMenuItem
-											onClick={() => copy(project.href)}
-											className="gap-x-1"
+		<>
+			<AnimatePresence mode="wait">
+				{localFullscreen || window?.innerWidth < 1024 ? (
+					<motion.div
+						key="fullscreen"
+						className="fixed lg:inset-12 inset-0 z-[100] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm lg:rounded-3xl overflow-hidden shadow-xl"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2 }}
+					>
+						<div className="p-6 h-full overflow-y-auto">
+							<div className="flex items-center justify-between mb-2">
+								<div className="h-12 w-full relative flex items-center justify-between gap-4">
+									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+										<motion.h1
+											key={`title-${currentPage.title}`}
+											className="text-4xl font-bold text-white whitespace-nowrap"
+											custom={slideDirection}
+											initial={{ x: slideDirection * 50, opacity: 0 }}
+											animate={{ x: 0, opacity: 1 }}
+											exit={{ x: -slideDirection * 50, opacity: 0 }}
+											transition={{ duration: 0.2 }}
 										>
-											<LinkIcon className="size-4" />
-											Copy Link
-										</ContextMenuItem>
-									</ContextMenuContent>
-								</ContextMenu>
-							</Link>
+											{currentPage.title}
+										</motion.h1>
+									</AnimatePresence>
+									<div className="flex gap-3">
+										<button
+											onClick={toggleFullscreen}
+											className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+										>
+											<Minimize size={24} />
+										</button>
+										<button
+											onClick={onClose}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<X size={24} />
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<div className="mt-2 flex justify-between">
+								<h2 className="text-[#dfc931] font-bold text-xl">
+									{currentPage.subtitle}
+								</h2>
+								<div className="flex gap-3">
+									<button
+										onClick={handlePrevPage}
+										className="text-white hover:text-yellow-200 transition-colors"
+									>
+										<ArrowLeft />
+									</button>
+									<button
+										onClick={handleNextPage}
+										className="text-white hover:text-yellow-200 transition-colors"
+									>
+										<ArrowRight />
+									</button>
+								</div>
+							</div>
+
+							<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
+
+							<div className="relative h-[calc(100%-180px)] overflow-visible">
+								<div className="overflow-y-auto h-full px-3 -mx-3">
+									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+										<motion.div
+											key={`content-${currentPage.title}`}
+											className="absolute inset-0"
+											custom={slideDirection}
+											initial={{
+												x: slideDirection * 20,
+												opacity: 0,
+											}}
+											animate={{
+												x: 0,
+												opacity: 1,
+											}}
+											exit={{
+												x: -slideDirection * 20,
+												opacity: 0,
+											}}
+											transition={{
+												duration: 0.2,
+												ease: 'easeInOut',
+											}}
+										>
+											{currentPage.content}
+										</motion.div>
+									</AnimatePresence>
+								</div>
+							</div>
 						</div>
-					)}
-				</React.Fragment>
-			))}
-		</div>
+						<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
+							{pages.map((_, i) => (
+								<motion.button
+									key={i}
+									className={cn(
+										'h-2 w-2 rounded-full transition-colors',
+										i === selectedPage ? 'bg-yellow-400' : 'bg-white'
+									)}
+									onClick={() => {
+										setSlideDirection(i > selectedPage ? 1 : -1)
+										setSelectedPage(i)
+										nextSound?.play()
+									}}
+									whileHover={{ scale: 1.2 }}
+									whileTap={{ scale: 0.8 }}
+								/>
+							))}
+						</div>
+					</motion.div>
+				) : (
+					<>
+						<motion.div
+							key="normal"
+							className="w-[450px] h-full bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.2 }}
+						>
+							<div className="p-6 h-full overflow-y-auto">
+								<div className="flex items-center justify-between mb-2">
+									<div className="h-12 w-full relative flex items-center justify-between gap-4">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.h1
+												key={`title-${currentPage.title}`}
+												className="text-4xl font-bold text-white whitespace-nowrap"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 50, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 50, opacity: 0 }}
+												transition={{ duration: 0.2 }}
+											>
+												{currentPage.title}
+											</motion.h1>
+										</AnimatePresence>
+										<div className="flex gap-3">
+											<button
+												onClick={toggleFullscreen}
+												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											>
+												<Maximize size={24} />
+											</button>
+											<button
+												onClick={onClose}
+												className="text-white hover:text-yellow-200 transition-colors"
+											>
+												<X size={24} />
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="mt-2 flex justify-between">
+									<h2 className="text-[#dfc931] font-bold text-xl">
+										{currentPage.subtitle}
+									</h2>
+									<div className="flex gap-3">
+										<button
+											onClick={handlePrevPage}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<ArrowLeft />
+										</button>
+										<button
+											onClick={handleNextPage}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<ArrowRight />
+										</button>
+									</div>
+								</div>
+
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
+
+								<div className="relative h-[calc(100%-180px)] overflow-visible">
+									<div className="overflow-y-auto h-full px-3 -mx-3">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.div
+												key={`content-${currentPage.title}`}
+												className="absolute inset-0"
+												custom={slideDirection}
+												initial={{
+													x: slideDirection * 20,
+													opacity: 0,
+												}}
+												animate={{
+													x: 0,
+													opacity: 1,
+												}}
+												exit={{
+													x: -slideDirection * 20,
+													opacity: 0,
+												}}
+												transition={{
+													duration: 0.2,
+													ease: 'easeInOut',
+												}}
+											>
+												{currentPage.content}
+											</motion.div>
+										</AnimatePresence>
+									</div>
+								</div>
+							</div>
+						</motion.div>
+						<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
+							{pages.map((_, i) => (
+								<motion.button
+									key={i}
+									className={cn(
+										'h-2 w-2 rounded-full transition-colors',
+										i === selectedPage ? 'bg-yellow-400' : 'bg-white'
+									)}
+									onClick={() => {
+										setSlideDirection(i > selectedPage ? 1 : -1)
+										setSelectedPage(i)
+										nextSound?.play()
+									}}
+									whileHover={{ scale: 1.2 }}
+									whileTap={{ scale: 0.8 }}
+								/>
+							))}
+						</div>
+					</>
+				)}
+			</AnimatePresence>
+		</>
 	)
 }

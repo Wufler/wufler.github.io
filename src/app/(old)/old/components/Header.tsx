@@ -12,6 +12,9 @@ export default function Header() {
 
 	return (
 		<div className="text-center bg-gradient-to-r from-orange-500 via-orange-500 to-yellow-500 h-full w-full md:w-[45%] lg:w-[35%] flex flex-col justify-center gap-2 md:gap-0 md:justify-evenly items-center">
+			<Link href={'/'} className="absolute top-4 left-4">
+				new portfolio
+			</Link>
 			<Link href="https://github.com/WoIfey" target="_blank">
 				<h1 className="text-[4rem] xl:text-[5rem] drop-shadow-xl text-orange-100 transition-all duration-300 hover:scale-110 uppercase">
 					wolfey
