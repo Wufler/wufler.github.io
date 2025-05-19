@@ -78,7 +78,7 @@ export default function About({
 							<div key={name} className="group relative">
 								<div className="bg-[#dfc931] p-4 rounded-lg">
 									<div className="flex items-center gap-3">
-										<div className="bg-gradient-to-br from-orange-500 to-red-700 rounded-lg p-1.5">
+										<div className="bg-orange-500 rounded-lg p-1.5">
 											<Icon className="size-6 text-white" />
 										</div>
 										<h3 className="font-bold text-black">{name}</h3>
@@ -202,7 +202,7 @@ export default function About({
 										</button>
 										<button
 											onClick={onClose}
-											className="text-white hover:text-yellow-200 transition-colors md:hidden"
+											className="text-white hover:text-yellow-200 transition-colors lg:hidden"
 										>
 											<X size={24} />
 										</button>

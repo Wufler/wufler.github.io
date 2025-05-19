@@ -215,7 +215,7 @@ export default function Projects({
 											</button>
 											<button
 												onClick={onClose}
-												className="text-white hover:text-yellow-200 transition-colors md:hidden"
+												className="text-white hover:text-yellow-200 transition-colors lg:hidden"
 											>
 												<X size={24} />
 											</button>
