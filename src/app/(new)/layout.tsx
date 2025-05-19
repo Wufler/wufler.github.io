@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Quicksand } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const quicksand = Quicksand({
+	weight: ['400', '700'],
+	subsets: ['latin'],
+	display: 'swap',
+	variable: '--font-quicksand',
+})
 
 export const metadata: Metadata = {
 	title: "Wolfey's Portfolio",
@@ -32,8 +37,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>{children}</body>
-			<Toaster />
+			<meta name="google-adsense-account" content="ca-pub-3750030968413484" />
+			<body className={quicksand.variable}>
+				{children}
+				<Toaster position="bottom-left" />
+			</body>
 		</html>
 	)
 }
