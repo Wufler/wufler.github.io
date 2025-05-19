@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'wolfey.s-ul.eu'
       },
-    ]
+    ],
+    minimumCacheTTL: 2678400,
   },
   eslint: {
     ignoreDuringBuilds: true,
