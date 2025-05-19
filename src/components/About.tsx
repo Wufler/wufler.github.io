@@ -77,9 +77,7 @@ export default function About({
 							<div key={name} className="group relative">
 								<div className="bg-[#dfc931] p-4 rounded-lg">
 									<div className="flex items-center gap-3">
-										<div className="bg-orange-500 rounded-lg p-1.5">
-											<Icon className="size-6 text-white" />
-										</div>
+										<Icon className="size-6 text-white" />
 										<h3 className="font-bold text-black">{name}</h3>
 									</div>
 								</div>
@@ -99,11 +97,6 @@ export default function About({
 							<div className="group relative">
 								<div className="bg-[#dfc931]/90 p-4 rounded-lg backdrop-blur-sm">
 									<div className="flex items-start gap-4">
-										<div className="mt-1">
-											<div className="w-5 h-5 border-2 border-black rounded-sm flex items-center justify-center">
-												<div className="w-3 h-3 bg-black rounded-sm"></div>
-											</div>
-										</div>
 										<div className="flex-1">
 											<div className="flex items-center justify-between">
 												<h3 className="font-bold text-black text-lg">{build.title}</h3>
