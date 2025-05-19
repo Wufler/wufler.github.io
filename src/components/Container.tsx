@@ -6,7 +6,6 @@ export default function Container({
 	children,
 	showMenu,
 	isSecondary = false,
-	otherMenuOpen = false,
 	isFullscreen = false,
 }: Container) {
 	if (isFullscreen) {

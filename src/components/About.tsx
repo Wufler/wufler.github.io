@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { ArrowLeft, ArrowRight, X, Maximize, Minimize } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import TypeScript from './ui/icons/typescript'
 import ReactIcon from './ui/icons/react'
 import Nextjs from './ui/icons/nextjs'
