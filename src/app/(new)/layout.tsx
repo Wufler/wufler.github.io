@@ -37,6 +37,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<meta name="google-adsense-account" content="ca-pub-3750030968413484" />
 			<body className={quicksand.variable}>
 				{children}
 				<Toaster position="bottom-left" />

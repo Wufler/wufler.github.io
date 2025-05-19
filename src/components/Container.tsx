@@ -18,29 +18,20 @@ export default function Container({
 			{showMenu && (
 				<motion.div
 					className={cn(
-						'fixed right-8 z-[99] flex items-center',
-						otherMenuOpen
-							? isSecondary
-								? 'bottom-8'
-								: 'top-8'
-							: 'top-1/2 -translate-y-1/2'
+						'fixed top-1/2 -translate-y-1/2 z-[99]',
+						isSecondary ? 'right-8' : 'left-8',
+						isFullscreen && 'inset-0 !translate-y-0'
 					)}
-					initial={{ x: 100, opacity: 0 }}
+					initial={{ x: isSecondary ? 100 : -100, opacity: 0 }}
 					animate={{ x: 0, opacity: 1 }}
-					exit={{ x: 100, opacity: 0 }}
+					exit={{ x: isSecondary ? 100 : -100, opacity: 0 }}
 					transition={{
 						type: 'spring',
 						stiffness: 360,
 						damping: 25,
 					}}
 				>
-					<div
-						className={cn(
-							'relative',
-							otherMenuOpen ? 'max-h-[calc(48vh-16px)]' : 'max-h-[90vh]',
-							'overflow-hidden transition-all duration-300'
-						)}
-					>
+					<div className={cn('w-[450px]', isFullscreen && 'w-full h-full')}>
 						{children}
 					</div>
 				</motion.div>

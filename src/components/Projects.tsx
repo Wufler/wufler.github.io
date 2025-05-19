@@ -13,8 +13,8 @@ export default function Projects({
 	onClose,
 	isFullscreen,
 	onFullscreenChange,
-}: Projects & { onClose: () => void }) {
-	const [selectedPage, setSelectedPage] = useState(0)
+}: Projects & { onClose?: () => void }) {
+	const [selectedPage, setSelectedPage] = useState(-1)
 	const [slideDirection, setSlideDirection] = useState(0)
 	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
 	const [localFullscreen, setLocalFullscreen] = useState(false)
@@ -59,7 +59,7 @@ export default function Projects({
 					<div
 						className={`grid ${
 							localFullscreen ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'
-						} gap-6 pb-12`}
+						} gap-6 pb-6`}
 					>
 						{categoryProjects.map((project, index) => (
 							<motion.div
@@ -76,66 +76,59 @@ export default function Projects({
 								}}
 								className="transform-gpu overflow-visible"
 							>
-								<Link href={project.href} target="_blank" onClick={handleProjectClick}>
-									<div
-										className="bg-gradient-to-br from-[#dfc931]/90 to-[#e5b822]/90 p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg relative group will-change-transform"
-										onMouseEnter={() => playMoveSound()}
-									>
-										<div className="flex gap-2 items-center absolute left-4 -top-2 z-10">
-											{project.status &&
-												project.status.map((status, i) => (
-													<motion.div
+								<Link
+									href={project.href}
+									target="_blank"
+									onClick={handleProjectClick}
+									onMouseEnter={() => playMoveSound()}
+								>
+									<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+										<Image
+											src={project.img}
+											alt={project.title}
+											fill
+											className="object-cover w-full h-full group-hover:brightness-110 transition"
+											style={{ zIndex: 1 }}
+										/>
+										<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
+										{project.status && (
+											<div className="absolute top-3 left-3 z-20 flex gap-2">
+												{project.status.map((status, i) => (
+													<span
 														key={i}
 														className={cn(
-															'text-white font-bold py-0.5 px-3 rounded-full shadow-sm',
+															'text-xs font-bold px-3 py-1 rounded-full shadow',
 															status.toLowerCase() === 'new'
-																? 'bg-[#4CAF50]'
+																? 'bg-[#4CAF50] text-white'
 																: status.toLowerCase() === 'updated'
-																? 'bg-[#009dff]'
+																? 'bg-[#009dff] text-white'
 																: status.toLowerCase() === 'outdated'
-																? 'bg-[#f1381f]'
-																: 'bg-[#f1651f]'
+																? 'bg-[#f1381f] text-white'
+																: 'bg-[#f1651f] text-white'
 														)}
 													>
 														{status}
-													</motion.div>
+													</span>
 												))}
-										</div>
-
-										<div className="flex flex-col gap-4">
-											<div className="flex flex-row justify-between gap-4">
-												<div className="space-y-3 flex-1">
-													<h3 className="font-bold text-xl mb-2 text-gray-900">
-														{project.title}
-													</h3>
-													<p className="text-sm text-gray-800 leading-relaxed line-clamp-3">
-														{project.description}
-													</p>
-												</div>
-
-												<div className="flex-shrink-0">
-													<div className="relative overflow-hidden rounded-lg shadow-md transform transition-transform duration-200 group-hover:rotate-5 group-hover:scale-105">
-														<Image
-															src={project.img}
-															alt={project.title}
-															width={120}
-															height={120}
-															className="object-cover transition duration-300 group-hover:brightness-110"
-														/>
-													</div>
-												</div>
 											</div>
-
-											<div className="flex flex-wrap gap-2">
-												{project.tags.map((tag, index) => (
+										)}
+										<div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+											<div className="flex flex-wrap gap-2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+												{project.tags.map((tag, i) => (
 													<span
-														key={index}
-														className="inline-block bg-[#dfc931] text-black text-xs font-semibold px-2 py-1 rounded-full"
+														key={i}
+														className="bg-[#dfc931] text-black text-xs font-semibold px-2 py-1 rounded-full"
 													>
 														{tag}
 													</span>
 												))}
 											</div>
+											<h3 className="text-2xl font-bold text-white drop-shadow">
+												{project.title}
+											</h3>
+											<p className="text-white/90 text-sm mt-1 drop-shadow">
+												{project.description}
+											</p>
 										</div>
 									</div>
 								</Link>
@@ -146,20 +139,33 @@ export default function Projects({
 			),
 		}
 	})
-
 	const handleNextPage = () => {
 		setSlideDirection(1)
-		setSelectedPage(prev => (prev + 1) % pages.length)
+		if (selectedPage === pages.length - 1) {
+			setSelectedPage(-1)
+		} else if (selectedPage === -1) {
+			setSelectedPage(0)
+		} else {
+			setSelectedPage(prev => prev + 1)
+		}
 		nextSound?.play()
 	}
 
 	const handlePrevPage = () => {
 		setSlideDirection(-1)
-		setSelectedPage(prev => (prev - 1 + pages.length) % pages.length)
+		if (selectedPage === 0) {
+			setSelectedPage(-1)
+		} else if (selectedPage === -1) {
+			setSelectedPage(pages.length - 1)
+		} else {
+			setSelectedPage(prev => prev - 1)
+		}
 		nextSound?.play()
 	}
 
-	const currentPage = pages[selectedPage]
+	const pageTitle = selectedPage === -1 ? 'ALL' : pages[selectedPage]?.title
+	const pageSubtitle =
+		selectedPage === -1 ? 'PROJECTS' : pages[selectedPage]?.subtitle
 
 	const toggleFullscreen = () => {
 		const newFullscreenState = !localFullscreen
@@ -178,131 +184,18 @@ export default function Projects({
 					<motion.div
 						key="fullscreen"
 						className="fixed lg:inset-12 inset-0 z-[100] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm lg:rounded-3xl overflow-hidden shadow-xl"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.2 }}
+						initial={{ opacity: 0, scale: 0.95 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.95 }}
+						transition={{ duration: 0.15, ease: 'easeOut' }}
 					>
-						<div className="p-6 h-full overflow-y-auto">
-							<div className="flex items-center justify-between mb-2">
-								<div className="h-12 w-full relative flex items-center justify-between gap-4">
-									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.h1
-											key={`title-${currentPage.title}`}
-											className="text-4xl font-bold text-white whitespace-nowrap"
-											custom={slideDirection}
-											initial={{ x: slideDirection * 50, opacity: 0 }}
-											animate={{ x: 0, opacity: 1 }}
-											exit={{ x: -slideDirection * 50, opacity: 0 }}
-											transition={{ duration: 0.2 }}
-										>
-											{currentPage.title}
-										</motion.h1>
-									</AnimatePresence>
-									<div className="flex gap-3">
-										<button
-											onClick={toggleFullscreen}
-											className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
-										>
-											<Minimize size={24} />
-										</button>
-										<button
-											onClick={onClose}
-											className="text-white hover:text-yellow-200 transition-colors"
-										>
-											<X size={24} />
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<div className="mt-2 flex justify-between">
-								<h2 className="text-[#dfc931] font-bold text-xl">
-									{currentPage.subtitle}
-								</h2>
-								<div className="flex gap-3">
-									<button
-										onClick={handlePrevPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowLeft />
-									</button>
-									<button
-										onClick={handleNextPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowRight />
-									</button>
-								</div>
-							</div>
-
-							<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
-
-							<div className="relative h-[calc(100%-180px)] overflow-visible">
-								<div className="overflow-y-auto h-full px-3 -mx-3">
-									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.div
-											key={`content-${currentPage.title}`}
-											className="absolute inset-0"
-											custom={slideDirection}
-											initial={{
-												x: slideDirection * 20,
-												opacity: 0,
-											}}
-											animate={{
-												x: 0,
-												opacity: 1,
-											}}
-											exit={{
-												x: -slideDirection * 20,
-												opacity: 0,
-											}}
-											transition={{
-												duration: 0.2,
-												ease: 'easeInOut',
-											}}
-										>
-											{currentPage.content}
-										</motion.div>
-									</AnimatePresence>
-								</div>
-							</div>
-						</div>
-						<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
-							{pages.map((_, i) => (
-								<motion.button
-									key={i}
-									className={cn(
-										'h-2 w-2 rounded-full transition-colors',
-										i === selectedPage ? 'bg-yellow-400' : 'bg-white'
-									)}
-									onClick={() => {
-										setSlideDirection(i > selectedPage ? 1 : -1)
-										setSelectedPage(i)
-										nextSound?.play()
-									}}
-									whileHover={{ scale: 1.2 }}
-									whileTap={{ scale: 0.8 }}
-								/>
-							))}
-						</div>
-					</motion.div>
-				) : (
-					<>
-						<motion.div
-							key="normal"
-							className="w-[450px] h-full bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							transition={{ duration: 0.2 }}
-						>
-							<div className="p-6 h-full overflow-y-auto">
+						<div className="flex flex-col h-full">
+							<div className="p-6 flex-1 overflow-y-auto">
 								<div className="flex items-center justify-between mb-2">
 									<div className="h-12 w-full relative flex items-center justify-between gap-4">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
 											<motion.h1
-												key={`title-${currentPage.title}`}
+												key={`title-${pageTitle}`}
 												className="text-4xl font-bold text-white whitespace-nowrap"
 												custom={slideDirection}
 												initial={{ x: slideDirection * 50, opacity: 0 }}
@@ -310,7 +203,7 @@ export default function Projects({
 												exit={{ x: -slideDirection * 50, opacity: 0 }}
 												transition={{ duration: 0.2 }}
 											>
-												{currentPage.title}
+												{pageTitle}
 											</motion.h1>
 										</AnimatePresence>
 										<div className="flex gap-3">
@@ -318,11 +211,11 @@ export default function Projects({
 												onClick={toggleFullscreen}
 												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
 											>
-												<Maximize size={24} />
+												<Minimize size={24} />
 											</button>
 											<button
 												onClick={onClose}
-												className="text-white hover:text-yellow-200 transition-colors"
+												className="text-white hover:text-yellow-200 transition-colors md:hidden"
 											>
 												<X size={24} />
 											</button>
@@ -331,9 +224,7 @@ export default function Projects({
 								</div>
 
 								<div className="mt-2 flex justify-between">
-									<h2 className="text-[#dfc931] font-bold text-xl">
-										{currentPage.subtitle}
-									</h2>
+									<h2 className="text-[#dfc931] font-bold text-xl">{pageSubtitle}</h2>
 									<div className="flex gap-3">
 										<button
 											onClick={handlePrevPage}
@@ -355,53 +246,408 @@ export default function Projects({
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-											<motion.div
-												key={`content-${currentPage.title}`}
-												className="absolute inset-0"
-												custom={slideDirection}
-												initial={{
-													x: slideDirection * 20,
-													opacity: 0,
-												}}
-												animate={{
-													x: 0,
-													opacity: 1,
-												}}
-												exit={{
-													x: -slideDirection * 20,
-													opacity: 0,
-												}}
-												transition={{
-													duration: 0.2,
-													ease: 'easeInOut',
-												}}
-											>
-												{currentPage.content}
-											</motion.div>
+											{selectedPage === -1 ? (
+												<motion.div
+													key="all-categories"
+													className="absolute inset-0"
+													custom={slideDirection}
+													initial={{ x: slideDirection * 20, opacity: 0 }}
+													animate={{ x: 0, opacity: 1 }}
+													exit={{ x: -slideDirection * 20, opacity: 0 }}
+													transition={{ duration: 0.2, ease: 'easeInOut' }}
+												>
+													<div>
+														{categories.map((category, categoryIndex) => {
+															const categoryProjects = projects.filter(
+																project => project.category === category && project.visible
+															)
+															return (
+																<div key={category} className="relative">
+																	<motion.div
+																		initial={{ opacity: 0, y: 20 }}
+																		animate={{ opacity: 1, y: 0 }}
+																		transition={{ delay: categoryIndex * 0.1 }}
+																	>
+																		<h2 className="text-2xl font-bold text-white mb-6">
+																			{category.toUpperCase()}
+																		</h2>
+																		<div
+																			className={`grid ${
+																				localFullscreen
+																					? 'grid-cols-1 lg:grid-cols-2'
+																					: 'grid-cols-1'
+																			} gap-6 pb-6`}
+																		>
+																			{categoryProjects.map((project, index) => (
+																				<motion.div
+																					key={project.id}
+																					initial={{ opacity: 0, y: 20 }}
+																					animate={{
+																						opacity: 1,
+																						y: 0,
+																						transition: {
+																							delay: index * 0.1,
+																							duration: 0.4,
+																							ease: 'easeOut',
+																						},
+																					}}
+																					className="transform-gpu overflow-visible"
+																				>
+																					<Link
+																						href={project.href}
+																						target="_blank"
+																						onClick={handleProjectClick}
+																						onMouseEnter={() => playMoveSound()}
+																					>
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+																							<Image
+																								src={project.img}
+																								alt={project.title}
+																								fill
+																								className="object-cover w-full h-full group-hover:brightness-110 transition"
+																								style={{ zIndex: 1 }}
+																							/>
+																							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
+																							{project.status && (
+																								<div className="absolute top-3 left-3 z-20 flex gap-2">
+																									{project.status.map((status, i) => (
+																										<span
+																											key={i}
+																											className={cn(
+																												'text-xs font-bold px-3 py-1 rounded-full shadow',
+																												status.toLowerCase() === 'new'
+																													? 'bg-[#4CAF50] text-white'
+																													: status.toLowerCase() === 'updated'
+																													? 'bg-[#009dff] text-white'
+																													: status.toLowerCase() === 'outdated'
+																													? 'bg-[#f1381f] text-white'
+																													: 'bg-[#f1651f] text-white'
+																											)}
+																										>
+																											{status}
+																										</span>
+																									))}
+																								</div>
+																							)}
+																							<div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+																								<div className="flex flex-wrap gap-2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+																									{project.tags.map((tag, i) => (
+																										<span
+																											key={i}
+																											className="bg-[#dfc931] text-black text-xs font-semibold px-2 py-1 rounded-full"
+																										>
+																											{tag}
+																										</span>
+																									))}
+																								</div>
+																								<h3 className="text-2xl font-bold text-white drop-shadow">
+																									{project.title}
+																								</h3>
+																								<p className="text-white/90 text-sm mt-1 drop-shadow">
+																									{project.description}
+																								</p>
+																							</div>
+																						</div>
+																					</Link>
+																				</motion.div>
+																			))}
+																		</div>
+																	</motion.div>
+																</div>
+															)
+														})}
+													</div>
+												</motion.div>
+											) : (
+												<motion.div
+													key={`content-${pageTitle}`}
+													className="absolute inset-0"
+													custom={slideDirection}
+													initial={{ x: slideDirection * 20, opacity: 0 }}
+													animate={{ x: 0, opacity: 1 }}
+													exit={{ x: -slideDirection * 20, opacity: 0 }}
+													transition={{ duration: 0.2, ease: 'easeInOut' }}
+												>
+													{pages[selectedPage]?.content}
+												</motion.div>
+											)}
 										</AnimatePresence>
 									</div>
 								</div>
 							</div>
-						</motion.div>
-						<div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
-							{pages.map((_, i) => (
+							<div className="flex justify-center gap-2 flex-wrap mt-8 mb-4">
 								<motion.button
-									key={i}
+									key="all-categories"
 									className={cn(
-										'h-2 w-2 rounded-full transition-colors',
-										i === selectedPage ? 'bg-yellow-400' : 'bg-white'
+										'px-3 py-1 rounded-full text-sm font-medium transition-colors',
+										selectedPage === -1
+											? 'bg-yellow-400 text-gray-900'
+											: 'bg-white/20 text-white hover:bg-white/30'
 									)}
 									onClick={() => {
-										setSlideDirection(i > selectedPage ? 1 : -1)
-										setSelectedPage(i)
+										setSlideDirection(-1)
+										setSelectedPage(-1)
 										nextSound?.play()
 									}}
-									whileHover={{ scale: 1.2 }}
-									whileTap={{ scale: 0.8 }}
-								/>
-							))}
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+								>
+									All
+								</motion.button>
+								{categories.map((category, i) => (
+									<motion.button
+										key={category}
+										className={cn(
+											'px-3 py-1 rounded-full text-sm font-medium transition-colors',
+											selectedPage === i
+												? 'bg-yellow-400 text-gray-900'
+												: 'bg-white/20 text-white hover:bg-white/30'
+										)}
+										onClick={() => {
+											setSlideDirection(i > selectedPage ? 1 : -1)
+											setSelectedPage(i)
+											nextSound?.play()
+										}}
+										whileHover={{ scale: 1.05 }}
+										whileTap={{ scale: 0.95 }}
+									>
+										{category}
+									</motion.button>
+								))}
+							</div>
 						</div>
-					</>
+					</motion.div>
+				) : (
+					<motion.div
+						key="normal"
+						className="w-full h-[80vh] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
+						initial={{ opacity: 0, scale: 0.95 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.95 }}
+						transition={{ duration: 0.15, ease: 'easeOut' }}
+					>
+						<div className="flex flex-col h-full">
+							<div className="p-6 flex-1 overflow-y-auto">
+								<div className="flex items-center justify-between mb-2">
+									<div className="h-12 w-full relative flex items-center justify-between gap-4">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.h1
+												key={`title-${pageTitle}`}
+												className="text-4xl font-bold text-white whitespace-nowrap"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 50, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 50, opacity: 0 }}
+												transition={{ duration: 0.2 }}
+											>
+												{pageTitle}
+											</motion.h1>
+										</AnimatePresence>
+										<div className="flex gap-3">
+											<button
+												onClick={toggleFullscreen}
+												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											>
+												<Maximize size={24} />
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="mt-2 flex justify-between">
+									<h2 className="text-[#dfc931] font-bold text-xl">{pageSubtitle}</h2>
+									<div className="flex gap-3">
+										<button
+											onClick={handlePrevPage}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<ArrowLeft />
+										</button>
+										<button
+											onClick={handleNextPage}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<ArrowRight />
+										</button>
+									</div>
+								</div>
+
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
+
+								<div className="relative h-[calc(100%-180px)] overflow-visible">
+									<div className="overflow-y-auto h-full px-3 -mx-3">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											{selectedPage === -1 ? (
+												<motion.div
+													key="all-categories"
+													className="absolute inset-0"
+													custom={slideDirection}
+													initial={{ x: slideDirection * 20, opacity: 0 }}
+													animate={{ x: 0, opacity: 1 }}
+													exit={{ x: -slideDirection * 20, opacity: 0 }}
+													transition={{ duration: 0.2, ease: 'easeInOut' }}
+												>
+													<div>
+														{categories.map((category, categoryIndex) => {
+															const categoryProjects = projects.filter(
+																project => project.category === category && project.visible
+															)
+															return (
+																<div key={category} className="relative">
+																	<motion.div
+																		initial={{ opacity: 0, y: 20 }}
+																		animate={{ opacity: 1, y: 0 }}
+																		transition={{ delay: categoryIndex * 0.1 }}
+																	>
+																		<h2 className="text-2xl font-bold text-white mb-6">
+																			{category.toUpperCase()}
+																		</h2>
+																		<div
+																			className={`grid ${
+																				localFullscreen
+																					? 'grid-cols-1 lg:grid-cols-2'
+																					: 'grid-cols-1'
+																			} gap-6 pb-6`}
+																		>
+																			{categoryProjects.map((project, index) => (
+																				<motion.div
+																					key={project.id}
+																					initial={{ opacity: 0, y: 20 }}
+																					animate={{
+																						opacity: 1,
+																						y: 0,
+																						transition: {
+																							delay: index * 0.1,
+																							duration: 0.4,
+																							ease: 'easeOut',
+																						},
+																					}}
+																					className="transform-gpu overflow-visible"
+																				>
+																					<Link
+																						href={project.href}
+																						target="_blank"
+																						onClick={handleProjectClick}
+																						onMouseEnter={() => playMoveSound()}
+																					>
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+																							<Image
+																								src={project.img}
+																								alt={project.title}
+																								fill
+																								className="object-cover w-full h-full group-hover:brightness-110 transition"
+																								style={{ zIndex: 1 }}
+																							/>
+																							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
+																							{project.status && (
+																								<div className="absolute top-3 left-3 z-20 flex gap-2">
+																									{project.status.map((status, i) => (
+																										<span
+																											key={i}
+																											className={cn(
+																												'text-xs font-bold px-3 py-1 rounded-full shadow',
+																												status.toLowerCase() === 'new'
+																													? 'bg-[#4CAF50] text-white'
+																													: status.toLowerCase() === 'updated'
+																													? 'bg-[#009dff] text-white'
+																													: status.toLowerCase() === 'outdated'
+																													? 'bg-[#f1381f] text-white'
+																													: 'bg-[#f1651f] text-white'
+																											)}
+																										>
+																											{status}
+																										</span>
+																									))}
+																								</div>
+																							)}
+																							<div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+																								<div className="flex flex-wrap gap-2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+																									{project.tags.map((tag, i) => (
+																										<span
+																											key={i}
+																											className="bg-[#dfc931] text-black text-xs font-semibold px-2 py-1 rounded-full"
+																										>
+																											{tag}
+																										</span>
+																									))}
+																								</div>
+																								<h3 className="text-2xl font-bold text-white drop-shadow">
+																									{project.title}
+																								</h3>
+																								<p className="text-white/90 text-sm mt-1 drop-shadow">
+																									{project.description}
+																								</p>
+																							</div>
+																						</div>
+																					</Link>
+																				</motion.div>
+																			))}
+																		</div>
+																	</motion.div>
+																</div>
+															)
+														})}
+													</div>
+												</motion.div>
+											) : (
+												<motion.div
+													key={`content-${pageTitle}`}
+													className="absolute inset-0"
+													custom={slideDirection}
+													initial={{ x: slideDirection * 20, opacity: 0 }}
+													animate={{ x: 0, opacity: 1 }}
+													exit={{ x: -slideDirection * 20, opacity: 0 }}
+													transition={{ duration: 0.2, ease: 'easeInOut' }}
+												>
+													{pages[selectedPage]?.content}
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</div>
+								</div>
+							</div>
+							<div className="flex justify-center gap-2 flex-wrap mt-4 mb-4">
+								<motion.button
+									key="all-categories"
+									className={cn(
+										'px-3 py-1 rounded-full text-sm font-medium transition-colors',
+										selectedPage === -1
+											? 'bg-yellow-400 text-gray-900'
+											: 'bg-white/20 text-white hover:bg-white/30'
+									)}
+									onClick={() => {
+										setSlideDirection(-1)
+										setSelectedPage(-1)
+										nextSound?.play()
+									}}
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+								>
+									All
+								</motion.button>
+								{categories.map((category, i) => (
+									<motion.button
+										key={category}
+										className={cn(
+											'px-3 py-1 rounded-full text-sm font-medium transition-colors',
+											selectedPage === i
+												? 'bg-yellow-400 text-gray-900'
+												: 'bg-white/20 text-white hover:bg-white/30'
+										)}
+										onClick={() => {
+											setSlideDirection(i > selectedPage ? 1 : -1)
+											setSelectedPage(i)
+											nextSound?.play()
+										}}
+										whileHover={{ scale: 1.05 }}
+										whileTap={{ scale: 0.95 }}
+									>
+										{category}
+									</motion.button>
+								))}
+							</div>
+						</div>
+					</motion.div>
 				)}
 			</AnimatePresence>
 		</>
