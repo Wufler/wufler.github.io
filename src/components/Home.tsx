@@ -16,7 +16,7 @@ export default function Home({
 			<div className="relative z-10 container mx-auto px-4 h-full flex flex-col">
 				<AnimatePresence>
 					<motion.div
-						key="popit-menu"
+						key="menus"
 						className="h-full w-full"
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}

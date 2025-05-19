@@ -58,7 +58,9 @@ export default function Projects({
 				<div className="text-white">
 					<div
 						className={`grid ${
-							localFullscreen ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'
+							localFullscreen
+								? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+								: 'grid-cols-1'
 						} gap-6 pb-6`}
 					>
 						{categoryProjects.map((project, index) => (
@@ -274,7 +276,7 @@ export default function Projects({
 																		<div
 																			className={`grid ${
 																				localFullscreen
-																					? 'grid-cols-1 lg:grid-cols-2'
+																					? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
 																					: 'grid-cols-1'
 																			} gap-6 pb-6`}
 																		>
@@ -375,7 +377,7 @@ export default function Projects({
 									</div>
 								</div>
 							</div>
-							<div className="flex justify-center gap-2 flex-wrap mt-8 mb-4">
+							<div className="flex justify-center gap-2 flex-wrap my-4">
 								<motion.button
 									key="all-categories"
 									className={cn(
@@ -505,7 +507,7 @@ export default function Projects({
 																		<div
 																			className={`grid ${
 																				localFullscreen
-																					? 'grid-cols-1 lg:grid-cols-2'
+																					? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
 																					: 'grid-cols-1'
 																			} gap-6 pb-6`}
 																		>
@@ -606,7 +608,7 @@ export default function Projects({
 									</div>
 								</div>
 							</div>
-							<div className="flex justify-center gap-2 flex-wrap mt-4 mb-4">
+							<div className="flex justify-center gap-2 flex-wrap my-4">
 								<motion.button
 									key="all-categories"
 									className={cn(
