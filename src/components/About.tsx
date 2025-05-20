@@ -44,16 +44,19 @@ export default function About({
 	builds,
 	isFullscreen,
 	onFullscreenChange,
+	isMuted,
 }: {
 	onClose?: () => void
 	builds: Build[]
 	isFullscreen?: boolean
 	onFullscreenChange?: (state: boolean) => void
+	isMuted?: boolean
 }) {
 	const [selectedPage, setSelectedPage] = useState(0)
 	const [slideDirection, setSlideDirection] = useState(0)
 	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
 	const [openSound, setOpenSound] = useState<HTMLAudioElement | null>(null)
+	const [moveSound, setMoveSound] = useState<HTMLAudioElement | null>(null)
 	const [localFullscreen, setLocalFullscreen] = useState(false)
 	const [isDiscordCopied, setIsDiscordCopied] = useState(false)
 
@@ -85,14 +88,27 @@ export default function About({
 
 	useEffect(() => {
 		const nextAudio = new Audio('/next.wav')
-		nextAudio.volume = 0.4
+		nextAudio.volume = 0.2
 		setNextSound(nextAudio)
+	}, [])
+
+	useEffect(() => {
+		const moveAudio = new Audio('/move.wav')
+		moveAudio.volume = 0.2
+		setMoveSound(moveAudio)
 	}, [])
 
 	const handleDiscordClick = () => {
 		navigator.clipboard.writeText('woolfey')
 		setIsDiscordCopied(true)
 		setTimeout(() => setIsDiscordCopied(false), 2000)
+	}
+
+	const handleHover = () => {
+		if (moveSound) {
+			moveSound.muted = !!isMuted
+			moveSound.play()
+		}
 	}
 
 	const pages = [
@@ -111,7 +127,11 @@ export default function About({
 					<div className="space-y-2">
 						<h3 className="text-[#dfc931] font-bold text-xl">Contact</h3>
 						<div className="grid grid-cols-2 gap-2">
-							<a href="mailto:hi@wolfey.me" className="block">
+							<a
+								href="mailto:hi@wolfey.me"
+								className="block"
+								onMouseEnter={handleHover}
+							>
 								<div className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg hover:from-[#dfc931]/70 hover:to-[#dfc931]/50 transition-all duration-200 group">
 									<div className="flex items-center gap-2">
 										<span className="transition-all duration-200 transform group-hover:rotate-[360deg]">
@@ -124,6 +144,7 @@ export default function About({
 							</a>
 							<div
 								onClick={handleDiscordClick}
+								onMouseEnter={handleHover}
 								className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg hover:from-[#dfc931]/70 hover:to-[#dfc931]/50 transition-all duration-200 cursor-pointer group"
 							>
 								<div className="flex items-center gap-2">
@@ -207,7 +228,7 @@ export default function About({
 							{ Icon: Prisma, name: 'Prisma', link: 'https://www.prisma.io/' },
 							{ name: 'and more...' },
 						].map(({ Icon, name, link }) => (
-							<div key={name} className="group relative">
+							<div key={name} className="group relative" onMouseEnter={handleHover}>
 								{link ? (
 									<a
 										href={link}
@@ -285,13 +306,19 @@ export default function About({
 	const handleNextPage = () => {
 		setSlideDirection(1)
 		setSelectedPage(prev => (prev + 1) % pages.length)
-		nextSound?.play()
+		if (nextSound) {
+			nextSound.muted = !!isMuted
+			nextSound.play()
+		}
 	}
 
 	const handlePrevPage = () => {
 		setSlideDirection(-1)
 		setSelectedPage(prev => (prev - 1 + pages.length) % pages.length)
-		nextSound?.play()
+		if (nextSound) {
+			nextSound.muted = !!isMuted
+			nextSound.play()
+		}
 	}
 
 	const currentPage = pages[selectedPage]
@@ -338,7 +365,10 @@ export default function About({
 											<button
 												onClick={() => {
 													toggleFullscreen()
-													openSound?.play()
+													if (openSound) {
+														openSound.muted = !!isMuted
+														openSound.play()
+													}
 												}}
 												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
 											>

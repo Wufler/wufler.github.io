@@ -13,7 +13,11 @@ export default function Projects({
 	onClose,
 	isFullscreen,
 	onFullscreenChange,
-}: Projects & { onClose?: () => void }) {
+	isMuted,
+}: Projects & {
+	onClose?: () => void
+	isMuted?: boolean
+}) {
 	const [selectedPage, setSelectedPage] = useState(-1)
 	const [slideDirection, setSlideDirection] = useState(0)
 	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
@@ -28,7 +32,7 @@ export default function Projects({
 
 	useEffect(() => {
 		const nextAudio = new Audio('/next.wav')
-		nextAudio.volume = 0.4
+		nextAudio.volume = 0.2
 		setNextSound(nextAudio)
 	}, [])
 
@@ -37,6 +41,11 @@ export default function Projects({
 		openAudio.volume = 0.2
 		setOpenSound(openAudio)
 	}, [])
+
+	useEffect(() => {
+		if (openSound) openSound.muted = !!isMuted
+		if (nextSound) nextSound.muted = !!isMuted
+	}, [isMuted, openSound, nextSound])
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -254,7 +263,7 @@ export default function Projects({
 								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
 							</div>
 
-							<div className="p-6 pt-3 flex-1 overflow-y-auto">
+							<div className="p-6 pt-0 pb-0 flex-1 overflow-y-auto">
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
@@ -486,7 +495,7 @@ export default function Projects({
 								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
 							</div>
 
-							<div className="p-6 pt-3 flex-1 overflow-y-auto">
+							<div className="p-6 pt-0 pb-0 flex-1 overflow-y-auto">
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>

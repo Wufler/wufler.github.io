@@ -8,7 +8,7 @@ import Container from './Container'
 import Projects from './Projects'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FilePenLine, Sparkles } from 'lucide-react'
+import { FilePenLine, Sparkles, Volume2, VolumeOff } from 'lucide-react'
 
 export default function Menu({
 	projects,
@@ -28,6 +28,7 @@ export default function Menu({
 	const [isMobile, setIsMobile] = useState(false)
 	const [wasAboutOpen, setWasAboutOpen] = useState(false)
 	const [wasProjectsOpen, setWasProjectsOpen] = useState(false)
+	const [isMuted, setIsMuted] = useState(false)
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -51,14 +52,22 @@ export default function Menu({
 
 		openAudio.volume = 0.2
 		closeAudio.volume = 0.2
-		moveAudio.volume = 0.4
-		projectAudio.volume = 0.4
+		moveAudio.volume = 0.2
+		projectAudio.volume = 0.2
 
 		setOpenSound(openAudio)
 		setCloseSound(closeAudio)
 		setMoveSound(moveAudio)
 		setProjectSound(projectAudio)
 	}, [])
+
+	const toggleAudio = () => {
+		setIsMuted(!isMuted)
+		if (openSound) openSound.muted = !isMuted
+		if (closeSound) closeSound.muted = !isMuted
+		if (moveSound) moveSound.muted = !isMuted
+		if (projectSound) projectSound.muted = !isMuted
+	}
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -163,25 +172,30 @@ export default function Menu({
 				</motion.div>
 			)}
 			<div className="fixed inset-0 flex items-center justify-center z-20 pointer-events-none">
-				<div className="flex items-center gap-4">
-					<Link
-						href="https://github.com/WoIfey"
-						target="_blank"
-						className="pointer-events-auto"
-					>
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#E67E22] via-[#F39C12] to-[#FFA07A] drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
-							WOLFEY
-						</h1>
-					</Link>
-					<Link href="/old" className="pointer-events-auto">
-						<Image
-							src={'/favicon.ico'}
-							width={80}
-							height={80}
-							alt="🦊"
-							className="size-16 md:size-20 relative z-10"
-						/>
-					</Link>
+				<div className="flex flex-col items-center gap-4">
+					<div className="flex items-center gap-4">
+						<Link
+							href="https://github.com/WoIfey"
+							target="_blank"
+							className="pointer-events-auto"
+						>
+							<h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#E67E22] via-[#F39C12] to-[#FFA07A] drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+								WOLFEY
+							</h1>
+						</Link>
+						<Link href="/old" className="pointer-events-auto">
+							<Image
+								src={'/favicon.ico'}
+								width={80}
+								height={80}
+								alt="🦊"
+								className="size-16 md:size-20 relative z-10"
+							/>
+						</Link>
+					</div>
+					<button onClick={toggleAudio} className="pointer-events-auto text-white">
+						{isMuted ? <VolumeOff /> : <Volume2 />}
+					</button>
 				</div>
 			</div>
 			<Container
@@ -197,6 +211,7 @@ export default function Menu({
 						playMoveSound={playMoveSound}
 						isFullscreen={isFullscreen}
 						onFullscreenChange={handleFullscreenChange}
+						isMuted={isMuted}
 					/>
 				</div>
 			</Container>
@@ -212,6 +227,7 @@ export default function Menu({
 						builds={builds}
 						isFullscreen={isAboutFullscreen}
 						onFullscreenChange={handleAboutFullscreenChange}
+						isMuted={isMuted}
 					/>
 				</div>
 			</Container>
