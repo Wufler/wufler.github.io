@@ -11,8 +11,12 @@ export default function Home({
 	builds: Build[]
 }) {
 	return (
-		<div className="h-dvh w-full text-white bg-black overflow-hidden">
-			<div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(255,69,0,0.3),rgba(255,140,0,0.1))]" />
+		<div className="h-dvh w-full overflow-hidden">
+			<div className="relative h-full w-full bg-[#09090B]">
+				<div className="absolute bottom-0 top-0 right-0 left-0 bg-[#09090B] bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:1.5rem_2rem]"></div>
+				<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-auto w-full aspect-square min-w-[800px] rounded-full bg-[radial-gradient(circle,#1f1f1f,transparent)]" />
+			</div>
+
 			<div className="relative z-10 container mx-auto px-4 h-full flex flex-col">
 				<AnimatePresence>
 					<motion.div
@@ -22,7 +26,7 @@ export default function Home({
 						animate={{ opacity: 1 }}
 						transition={{ duration: 0.5 }}
 					>
-						<div className="flex items-center justify-center h-full w-full">
+						<div className="flex items-start justify-start h-full w-full">
 							<Menu projects={projects} builds={builds} />
 						</div>
 					</motion.div>

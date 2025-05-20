@@ -100,7 +100,7 @@ export default function About({
 			title: 'ABOUT ME',
 			subtitle: 'WEB DEVELOPER',
 			content: (
-				<div className="text-white space-y-4 pb-12">
+				<div className="text-white space-y-4 pb-6">
 					<p className="leading-relaxed text-lg">
 						Hi! I&apos;m Philip Huynh, a full-stack developer from{' '}
 						<Finland className="inline-block align-middle" /> Finland. I make some fun
@@ -317,89 +317,93 @@ export default function About({
 						exit={{ opacity: 0, scale: 0.95 }}
 						transition={{ duration: 0.15, ease: 'easeOut' }}
 					>
-						<div className="p-6 h-full overflow-y-auto">
-							<div className="flex items-center justify-between mb-2">
-								<div className="h-12 w-full relative flex items-center justify-between gap-4">
+						<div className="flex flex-col h-full">
+							<div className="sticky top-0 z-10 p-6 pb-3">
+								<div className="flex items-center justify-between mb-2">
+									<div className="h-12 w-full relative flex items-center justify-between gap-4">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.h1
+												key={`title-${currentPage.title}`}
+												className="text-4xl font-bold text-white whitespace-nowrap"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 50, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 50, opacity: 0 }}
+												transition={{ duration: 0.2 }}
+											>
+												{currentPage.title}
+											</motion.h1>
+										</AnimatePresence>
+										<div className="flex gap-3">
+											<button
+												onClick={() => {
+													toggleFullscreen()
+													openSound?.play()
+												}}
+												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											>
+												<Minimize size={24} />
+											</button>
+											<button
+												onClick={onClose}
+												className="text-white hover:text-yellow-200 transition-colors lg:hidden"
+											>
+												<X size={24} />
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="mt-2 flex justify-between">
 									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.h1
-											key={`title-${currentPage.title}`}
-											className="text-4xl font-bold text-white whitespace-nowrap"
+										<motion.div
+											key={`subtitle-${currentPage.subtitle}`}
 											custom={slideDirection}
 											initial={{ x: slideDirection * 50, opacity: 0 }}
 											animate={{ x: 0, opacity: 1 }}
 											exit={{ x: -slideDirection * 50, opacity: 0 }}
 											transition={{ duration: 0.2 }}
+											className="text-[#dfc931] font-bold text-xl"
 										>
-											{currentPage.title}
-										</motion.h1>
+											{currentPage.subtitle}
+										</motion.div>
 									</AnimatePresence>
-									<div className="flex gap-3">
+									<div className="flex gap-2">
 										<button
-											onClick={() => {
-												toggleFullscreen()
-												openSound?.play()
-											}}
-											className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											onClick={handlePrevPage}
+											className="text-white hover:text-yellow-200 transition-colors"
 										>
-											<Minimize size={24} />
+											<ArrowLeft />
 										</button>
 										<button
-											onClick={onClose}
-											className="text-white hover:text-yellow-200 transition-colors lg:hidden"
+											onClick={handleNextPage}
+											className="text-white hover:text-yellow-200 transition-colors"
 										>
-											<X size={24} />
+											<ArrowRight />
 										</button>
 									</div>
 								</div>
+
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
 							</div>
 
-							<div className="mt-2 flex justify-between">
-								<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-									<motion.div
-										key={`subtitle-${currentPage.subtitle}`}
-										custom={slideDirection}
-										initial={{ x: slideDirection * 50, opacity: 0 }}
-										animate={{ x: 0, opacity: 1 }}
-										exit={{ x: -slideDirection * 50, opacity: 0 }}
-										transition={{ duration: 0.2 }}
-										className="text-[#dfc931] font-bold text-xl"
-									>
-										{currentPage.subtitle}
-									</motion.div>
-								</AnimatePresence>
-								<div className="flex gap-2">
-									<button
-										onClick={handlePrevPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowLeft />
-									</button>
-									<button
-										onClick={handleNextPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowRight />
-									</button>
-								</div>
-							</div>
-
-							<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
-
-							<div className="relative h-[calc(100%-180px)] overflow-visible">
-								<div className="overflow-y-auto h-full px-3 -mx-3">
-									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.div
-											key={`content-${currentPage.title}`}
-											className="absolute inset-0"
-											custom={slideDirection}
-											initial={{ x: slideDirection * 20, opacity: 0 }}
-											animate={{ x: 0, opacity: 1 }}
-											exit={{ x: -slideDirection * 20, opacity: 0 }}
-											transition={{ duration: 0.2, ease: 'easeInOut' }}
-										>
-											{currentPage.content}
-										</motion.div>
-									</AnimatePresence>
+							<div className="p-6 pt-3 flex-1 overflow-y-auto">
+								<div className="relative h-[calc(100%-180px)] overflow-visible">
+									<div className="overflow-y-auto h-full px-3 -mx-3">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.div
+												key={`content-${currentPage.title}`}
+												className="absolute inset-0"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 20, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 20, opacity: 0 }}
+												transition={{ duration: 0.2, ease: 'easeInOut' }}
+											>
+												{currentPage.content}
+											</motion.div>
+										</AnimatePresence>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -413,80 +417,84 @@ export default function About({
 						exit={{ opacity: 0, scale: 0.95 }}
 						transition={{ duration: 0.15, ease: 'easeOut' }}
 					>
-						<div className="p-6 h-full overflow-y-auto">
-							<div className="flex items-center justify-between mb-2">
-								<div className="h-12 w-full relative flex items-center justify-between gap-4">
+						<div className="flex flex-col h-full">
+							<div className="sticky top-0 z-10 p-6 pb-3">
+								<div className="flex items-center justify-between mb-2">
+									<div className="h-12 w-full relative flex items-center justify-between gap-4">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.h1
+												key={`title-${currentPage.title}`}
+												className="text-4xl font-bold text-white whitespace-nowrap"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 50, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 50, opacity: 0 }}
+												transition={{ duration: 0.2 }}
+											>
+												{currentPage.title}
+											</motion.h1>
+										</AnimatePresence>
+										<div className="flex gap-3">
+											<button
+												onClick={toggleFullscreen}
+												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											>
+												<Maximize size={24} />
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div className="mt-2 flex justify-between">
 									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.h1
-											key={`title-${currentPage.title}`}
-											className="text-4xl font-bold text-white whitespace-nowrap"
+										<motion.div
+											key={`subtitle-${currentPage.subtitle}`}
 											custom={slideDirection}
 											initial={{ x: slideDirection * 50, opacity: 0 }}
 											animate={{ x: 0, opacity: 1 }}
 											exit={{ x: -slideDirection * 50, opacity: 0 }}
 											transition={{ duration: 0.2 }}
+											className="text-[#dfc931] font-bold text-xl"
 										>
-											{currentPage.title}
-										</motion.h1>
+											{currentPage.subtitle}
+										</motion.div>
 									</AnimatePresence>
-									<div className="flex gap-3">
+									<div className="flex gap-2">
 										<button
-											onClick={toggleFullscreen}
-											className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
+											onClick={handlePrevPage}
+											className="text-white hover:text-yellow-200 transition-colors"
 										>
-											<Maximize size={24} />
+											<ArrowLeft />
+										</button>
+										<button
+											onClick={handleNextPage}
+											className="text-white hover:text-yellow-200 transition-colors"
+										>
+											<ArrowRight />
 										</button>
 									</div>
 								</div>
+
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
 							</div>
 
-							<div className="mt-2 flex justify-between">
-								<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-									<motion.div
-										key={`subtitle-${currentPage.subtitle}`}
-										custom={slideDirection}
-										initial={{ x: slideDirection * 50, opacity: 0 }}
-										animate={{ x: 0, opacity: 1 }}
-										exit={{ x: -slideDirection * 50, opacity: 0 }}
-										transition={{ duration: 0.2 }}
-										className="text-[#dfc931] font-bold text-xl"
-									>
-										{currentPage.subtitle}
-									</motion.div>
-								</AnimatePresence>
-								<div className="flex gap-2">
-									<button
-										onClick={handlePrevPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowLeft />
-									</button>
-									<button
-										onClick={handleNextPage}
-										className="text-white hover:text-yellow-200 transition-colors"
-									>
-										<ArrowRight />
-									</button>
-								</div>
-							</div>
-
-							<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
-
-							<div className="relative h-[calc(100%-180px)] overflow-visible">
-								<div className="overflow-y-auto h-full px-3 -mx-3">
-									<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
-										<motion.div
-											key={`content-${currentPage.title}`}
-											className="absolute inset-0"
-											custom={slideDirection}
-											initial={{ x: slideDirection * 20, opacity: 0 }}
-											animate={{ x: 0, opacity: 1 }}
-											exit={{ x: -slideDirection * 20, opacity: 0 }}
-											transition={{ duration: 0.2, ease: 'easeInOut' }}
-										>
-											{currentPage.content}
-										</motion.div>
-									</AnimatePresence>
+							<div className="p-6 pt-3 flex-1 overflow-y-auto">
+								<div className="relative h-[calc(100%-180px)] overflow-visible">
+									<div className="overflow-y-auto h-full px-3 -mx-3">
+										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
+											<motion.div
+												key={`content-${currentPage.title}`}
+												className="absolute inset-0"
+												custom={slideDirection}
+												initial={{ x: slideDirection * 20, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -slideDirection * 20, opacity: 0 }}
+												transition={{ duration: 0.2, ease: 'easeInOut' }}
+											>
+												{currentPage.content}
+											</motion.div>
+										</AnimatePresence>
+									</div>
 								</div>
 							</div>
 						</div>

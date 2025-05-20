@@ -197,7 +197,7 @@ export default function Projects({
 						transition={{ duration: 0.15, ease: 'easeOut' }}
 					>
 						<div className="flex flex-col h-full">
-							<div className="p-6 flex-1 overflow-y-auto">
+							<div className="sticky top-0 z-10 p-6 pb-3">
 								<div className="flex items-center justify-between mb-2">
 									<div className="h-12 w-full relative flex items-center justify-between gap-4">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
@@ -251,8 +251,10 @@ export default function Projects({
 									</div>
 								</div>
 
-								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
+							</div>
 
+							<div className="p-6 pt-3 flex-1 overflow-y-auto">
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
@@ -436,7 +438,7 @@ export default function Projects({
 						transition={{ duration: 0.15, ease: 'easeOut' }}
 					>
 						<div className="flex flex-col h-full">
-							<div className="p-6 flex-1 overflow-y-auto">
+							<div className="sticky top-0 z-10 p-6 pb-3">
 								<div className="flex items-center justify-between mb-2">
 									<div className="h-12 w-full relative flex items-center justify-between gap-4">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
@@ -481,8 +483,10 @@ export default function Projects({
 									</div>
 								</div>
 
-								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-3"></div>
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2"></div>
+							</div>
 
+							<div className="p-6 pt-3 flex-1 overflow-y-auto">
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
 										<AnimatePresence initial={false} mode="wait" custom={slideDirection}>
