@@ -42,7 +42,8 @@ type Projects = {
 }
 
 type ButtonsProps = {
-    icon: React.ComponentType<{ isAnimating?: boolean }>
+    // icon: React.ComponentType<{ isAnimating?: boolean }>
+    icon: React.ComponentType<{ className?: string }>
     onClick: () => void
     name: string
 }

@@ -6,10 +6,9 @@ import Buttons from './Buttons'
 import About from './About'
 import Container from './Container'
 import Projects from './Projects'
-import SparklesIcon from './ui/icons/sparkles'
 import Link from 'next/link'
 import Image from 'next/image'
-import FilePenLineIcon from './ui/icons/pen-file'
+import { FilePenLine, Sparkles } from 'lucide-react'
 
 export default function Menu({
 	projects,
@@ -158,8 +157,8 @@ export default function Menu({
 					transition={{ type: 'spring', stiffness: 260, damping: 20 }}
 				>
 					<div className="flex flex-row space-x-4">
-						<Buttons onClick={toggleProjects} name="Projects" icon={SparklesIcon} />
-						<Buttons onClick={toggleAbout} name="About me" icon={FilePenLineIcon} />
+						<Buttons onClick={toggleProjects} name="Projects" icon={Sparkles} />
+						<Buttons onClick={toggleAbout} name="About me" icon={FilePenLine} />
 					</div>
 				</motion.div>
 			)}
