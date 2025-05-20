@@ -1,13 +1,43 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { ArrowLeft, ArrowRight, X, Maximize, Minimize } from 'lucide-react'
-import TypeScript from './ui/icons/typescript'
-import ReactIcon from './ui/icons/react'
-import Nextjs from './ui/icons/nextjs'
-import TailwindCSS from './ui/icons/tailwind'
-import PostgreSQL from './ui/icons/postgresql'
-import Prisma from './ui/icons/prisma'
+import {
+	ArrowLeft,
+	ArrowRight,
+	X,
+	Maximize,
+	Minimize,
+	AtSign,
+	Copy,
+	Check,
+} from 'lucide-react'
+import {
+	HTML5,
+	TypeScript,
+	ReactIcon,
+	Nextjs,
+	TailwindCSS,
+	PostgreSQL,
+	Prisma,
+	CSSNew,
+	JavaScript,
+	shadcnui,
+	Nodejs,
+	Neon,
+	Git,
+	GitHub,
+	Vercel,
+	npm,
+	pnpm,
+	Motion,
+	Docker,
+	Figma,
+	Cursor,
+	VisualStudioCode,
+	Discord,
+	BetterAuth,
+} from './ui/icons'
+import Finland from './ui/icons/finland'
 
 export default function About({
 	onClose,
@@ -23,7 +53,9 @@ export default function About({
 	const [selectedPage, setSelectedPage] = useState(0)
 	const [slideDirection, setSlideDirection] = useState(0)
 	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
+	const [openSound, setOpenSound] = useState<HTMLAudioElement | null>(null)
 	const [localFullscreen, setLocalFullscreen] = useState(false)
+	const [isDiscordCopied, setIsDiscordCopied] = useState(false)
 
 	useEffect(() => {
 		if (isFullscreen !== undefined) {
@@ -46,41 +78,158 @@ export default function About({
 	}, [localFullscreen, onFullscreenChange])
 
 	useEffect(() => {
+		const openAudio = new Audio('/open.wav')
+		openAudio.volume = 0.2
+		setOpenSound(openAudio)
+	}, [])
+
+	useEffect(() => {
 		const nextAudio = new Audio('/next.wav')
 		nextAudio.volume = 0.4
 		setNextSound(nextAudio)
 	}, [])
+
+	const handleDiscordClick = () => {
+		navigator.clipboard.writeText('woolfey')
+		setIsDiscordCopied(true)
+		setTimeout(() => setIsDiscordCopied(false), 2000)
+	}
 
 	const pages = [
 		{
 			title: 'ABOUT ME',
 			subtitle: 'WEB DEVELOPER',
 			content: (
-				<div className="text-white space-y-6 pb-12">
+				<div className="text-white space-y-4 pb-12">
 					<p className="leading-relaxed text-lg">
-						Hi! I&apos;m Philip Huynh, a full-stack developer. I make some fun things.
+						Hi! I&apos;m Philip Huynh, a full-stack developer from{' '}
+						<Finland className="inline-block align-middle" /> Finland. I make some fun
+						things, my coding journey started at the end of 2021 with a URL shortener
+						as my first project.
 					</p>
 
-					<h3 className="text-[#dfc931] font-bold text-xl mt-4 mb-4">
-						Skills & Technologies
-					</h3>
-
-					<div className="grid grid-cols-2 gap-4">
-						{[
-							{ Icon: TypeScript, name: 'TypeScript' },
-							{ Icon: ReactIcon, name: 'React' },
-							{ Icon: Nextjs, name: 'Next.js' },
-							{ Icon: TailwindCSS, name: 'TailwindCSS' },
-							{ Icon: PostgreSQL, name: 'PostgreSQL' },
-							{ Icon: Prisma, name: 'Prisma' },
-						].map(({ Icon, name }) => (
-							<div key={name} className="group relative">
-								<div className="bg-[#dfc931] p-4 rounded-lg">
-									<div className="flex items-center gap-3">
-										<Icon className="size-6 text-white" />
-										<h3 className="font-bold text-black">{name}</h3>
+					<div className="space-y-2">
+						<h3 className="text-[#dfc931] font-bold text-xl">Contact</h3>
+						<div className="grid grid-cols-2 gap-2">
+							<a href="mailto:hi@wolfey.me" className="block">
+								<div className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg hover:from-[#dfc931]/70 hover:to-[#dfc931]/50 transition-all duration-200 group">
+									<div className="flex items-center gap-2">
+										<span className="transition-all duration-200 transform group-hover:rotate-[360deg]">
+											<AtSign className="size-4 absolute group-hover:opacity-0 group-hover:scale-0 transition-all duration-200" />
+											<ArrowRight className="size-4 opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200" />
+										</span>
+										<h3 className="text-sm font-semibold truncate">hi@wolfey.me</h3>
 									</div>
 								</div>
+							</a>
+							<div
+								onClick={handleDiscordClick}
+								className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg hover:from-[#dfc931]/70 hover:to-[#dfc931]/50 transition-all duration-200 cursor-pointer group"
+							>
+								<div className="flex items-center gap-2">
+									<span className="transition-all duration-200 transform group-hover:rotate-[360deg]">
+										<Discord className="size-4 absolute group-hover:opacity-0 group-hover:scale-0 transition-all duration-200" />
+										{isDiscordCopied ? (
+											<Check className="size-4 text-green-500" />
+										) : (
+											<Copy className="size-4 opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200" />
+										)}
+									</span>
+									<h3 className="text-sm font-semibold truncate">woolfey</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<h3 className="text-[#dfc931] font-bold text-xl mb-2">Tech Stack</h3>
+					<div
+						className={`grid ${
+							localFullscreen
+								? 'lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2'
+								: 'grid-cols-3'
+						} gap-2`}
+					>
+						{[
+							{
+								Icon: HTML5,
+								name: 'HTML',
+								link: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+							},
+							{
+								Icon: CSSNew,
+								name: 'CSS',
+								link: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
+							},
+							{
+								Icon: JavaScript,
+								name: 'JavaScript',
+								link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+							},
+							{
+								Icon: TypeScript,
+								name: 'TypeScript',
+								link: 'https://www.typescriptlang.org/',
+							},
+							{ Icon: ReactIcon, name: 'React', link: 'https://react.dev/' },
+							{ Icon: Nextjs, name: 'Next.js', link: 'https://nextjs.org/' },
+							{
+								Icon: TailwindCSS,
+								name: 'tailwindcss',
+								link: 'https://tailwindcss.com/',
+							},
+							{ Icon: shadcnui, name: 'shadcn/ui', link: 'https://ui.shadcn.com/' },
+							{ Icon: Motion, name: 'motion', link: 'https://motion.dev/' },
+							{ Icon: Nodejs, name: 'NodeJS', link: 'https://nodejs.org/' },
+							{ Icon: Git, name: 'Git', link: 'https://git-scm.com/' },
+							{ Icon: GitHub, name: 'GitHub', link: 'https://github.com/' },
+							{ Icon: Vercel, name: 'Vercel', link: 'https://vercel.com/' },
+							{ Icon: npm, name: 'npm', link: 'https://www.npmjs.com/' },
+							{ Icon: pnpm, name: 'pnpm', link: 'https://pnpm.io/' },
+							{ Icon: Docker, name: 'Docker', link: 'https://www.docker.com/' },
+							{ Icon: Figma, name: 'Figma', link: 'https://www.figma.com/' },
+							{
+								Icon: VisualStudioCode,
+								name: 'VSCode',
+								link: 'https://code.visualstudio.com/',
+							},
+							{ Icon: Cursor, name: 'Cursor', link: 'https://www.cursor.com' },
+							{ Icon: Neon, name: 'Neon', link: 'https://neon.tech/' },
+							{
+								Icon: BetterAuth,
+								name: 'better-auth',
+								link: 'https://www.better-auth.com',
+							},
+							{
+								Icon: PostgreSQL,
+								name: 'PostgreSQL',
+								link: 'https://www.postgresql.org/',
+							},
+							{ Icon: Prisma, name: 'Prisma', link: 'https://www.prisma.io/' },
+							{ name: 'and more...' },
+						].map(({ Icon, name, link }) => (
+							<div key={name} className="group relative">
+								{link ? (
+									<a
+										href={link}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="block"
+									>
+										<div className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg hover:from-[#dfc931]/70 hover:to-[#dfc931]/50 transition-all duration-200">
+											<div className="flex items-center gap-2">
+												{Icon && <Icon className="size-4" />}
+												<h3 className="text-sm font-semibold truncate">{name}</h3>
+											</div>
+										</div>
+									</a>
+								) : (
+									<div className="bg-gradient-to-r from-[#dfc931]/50 to-[#dfc931]/30 p-2.5 rounded-lg">
+										<div className="flex items-center gap-2">
+											{Icon && <Icon className="size-4" />}
+											<h3 className="text-sm font-semibold truncate">{name}</h3>
+										</div>
+									</div>
+								)}
 							</div>
 						))}
 					</div>
@@ -150,7 +299,6 @@ export default function About({
 	const toggleFullscreen = () => {
 		const newFullscreenState = !localFullscreen
 		setLocalFullscreen(newFullscreenState)
-		nextSound?.play()
 
 		if (onFullscreenChange) {
 			onFullscreenChange(newFullscreenState)
@@ -187,7 +335,10 @@ export default function About({
 									</AnimatePresence>
 									<div className="flex gap-3">
 										<button
-											onClick={toggleFullscreen}
+											onClick={() => {
+												toggleFullscreen()
+												openSound?.play()
+											}}
 											className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
 										>
 											<Minimize size={24} />
@@ -256,7 +407,7 @@ export default function About({
 				) : (
 					<motion.div
 						key="normal"
-						className="w-full h-[80vh] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
+						className="w-full h-[90vh] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
 						initial={{ opacity: 0, scale: 0.95 }}
 						animate={{ opacity: 1, scale: 1 }}
 						exit={{ opacity: 0, scale: 0.95 }}

@@ -17,6 +17,7 @@ export default function Projects({
 	const [selectedPage, setSelectedPage] = useState(-1)
 	const [slideDirection, setSlideDirection] = useState(0)
 	const [nextSound, setNextSound] = useState<HTMLAudioElement | null>(null)
+	const [openSound, setOpenSound] = useState<HTMLAudioElement | null>(null)
 	const [localFullscreen, setLocalFullscreen] = useState(false)
 
 	useEffect(() => {
@@ -29,6 +30,12 @@ export default function Projects({
 		const nextAudio = new Audio('/next.wav')
 		nextAudio.volume = 0.4
 		setNextSound(nextAudio)
+	}, [])
+
+	useEffect(() => {
+		const openAudio = new Audio('/open.wav')
+		openAudio.volume = 0.2
+		setOpenSound(openAudio)
 	}, [])
 
 	useEffect(() => {
@@ -79,18 +86,17 @@ export default function Projects({
 								className="transform-gpu overflow-visible"
 							>
 								<Link
-									href={project.href}
+									href={project.href || ''}
 									target="_blank"
 									onClick={handleProjectClick}
 									onMouseEnter={() => playMoveSound()}
 								>
-									<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+									<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-56">
 										<Image
-											src={project.img}
+											src={project.images[0]}
 											alt={project.title}
 											fill
 											className="object-cover w-full h-full group-hover:brightness-110 transition"
-											style={{ zIndex: 1 }}
 										/>
 										<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
 										{project.status && (
@@ -129,7 +135,7 @@ export default function Projects({
 												{project.title}
 											</h3>
 											<p className="text-white/90 text-sm mt-1 drop-shadow">
-												{project.description}
+												{project.subtitle}
 											</p>
 										</div>
 									</div>
@@ -172,7 +178,6 @@ export default function Projects({
 	const toggleFullscreen = () => {
 		const newFullscreenState = !localFullscreen
 		setLocalFullscreen(newFullscreenState)
-		nextSound?.play()
 
 		if (onFullscreenChange) {
 			onFullscreenChange(newFullscreenState)
@@ -210,7 +215,10 @@ export default function Projects({
 										</AnimatePresence>
 										<div className="flex gap-3">
 											<button
-												onClick={toggleFullscreen}
+												onClick={() => {
+													toggleFullscreen()
+													openSound?.play()
+												}}
 												className="hidden lg:block text-white hover:text-yellow-200 transition-colors"
 											>
 												<Minimize size={24} />
@@ -270,7 +278,7 @@ export default function Projects({
 																		animate={{ opacity: 1, y: 0 }}
 																		transition={{ delay: categoryIndex * 0.1 }}
 																	>
-																		<h2 className="text-2xl font-bold text-white mb-6">
+																		<h2 className="text-2xl font-bold text-white mb-3">
 																			{category.toUpperCase()}
 																		</h2>
 																		<div
@@ -296,18 +304,17 @@ export default function Projects({
 																					className="transform-gpu overflow-visible"
 																				>
 																					<Link
-																						href={project.href}
+																						href={project.href || ''}
 																						target="_blank"
 																						onClick={handleProjectClick}
 																						onMouseEnter={() => playMoveSound()}
 																					>
-																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-64">
 																							<Image
-																								src={project.img}
+																								src={project.images[0]}
 																								alt={project.title}
 																								fill
 																								className="object-cover w-full h-full group-hover:brightness-110 transition"
-																								style={{ zIndex: 1 }}
 																							/>
 																							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
 																							{project.status && (
@@ -346,7 +353,7 @@ export default function Projects({
 																									{project.title}
 																								</h3>
 																								<p className="text-white/90 text-sm mt-1 drop-shadow">
-																									{project.description}
+																									{project.subtitle}
 																								</p>
 																							</div>
 																						</div>
@@ -422,7 +429,7 @@ export default function Projects({
 				) : (
 					<motion.div
 						key="normal"
-						className="w-full h-[80vh] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
+						className="w-full h-[90vh] bg-gradient-to-b from-[#c85825]/80 to-[#a04b26]/80 backdrop-blur-sm rounded-3xl overflow-hidden shadow-xl relative"
 						initial={{ opacity: 0, scale: 0.95 }}
 						animate={{ opacity: 1, scale: 1 }}
 						exit={{ opacity: 0, scale: 0.95 }}
@@ -474,7 +481,7 @@ export default function Projects({
 									</div>
 								</div>
 
-								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-6"></div>
+								<div className="border-b-2 border-dashed border-[#dfc931] mt-2 mb-3"></div>
 
 								<div className="relative h-[calc(100%-180px)] overflow-visible">
 									<div className="overflow-y-auto h-full px-3 -mx-3">
@@ -501,7 +508,7 @@ export default function Projects({
 																		animate={{ opacity: 1, y: 0 }}
 																		transition={{ delay: categoryIndex * 0.1 }}
 																	>
-																		<h2 className="text-2xl font-bold text-white mb-6">
+																		<h2 className="text-2xl font-bold text-white mb-3">
 																			{category.toUpperCase()}
 																		</h2>
 																		<div
@@ -527,18 +534,17 @@ export default function Projects({
 																					className="transform-gpu overflow-visible"
 																				>
 																					<Link
-																						href={project.href}
+																						href={project.href || ''}
 																						target="_blank"
 																						onClick={handleProjectClick}
 																						onMouseEnter={() => playMoveSound()}
 																					>
-																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-105 transition-transform duration-200 h-48">
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-48">
 																							<Image
-																								src={project.img}
+																								src={project.images[0]}
 																								alt={project.title}
 																								fill
 																								className="object-cover w-full h-full group-hover:brightness-110 transition"
-																								style={{ zIndex: 1 }}
 																							/>
 																							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
 																							{project.status && (
@@ -577,7 +583,7 @@ export default function Projects({
 																									{project.title}
 																								</h3>
 																								<p className="text-white/90 text-sm mt-1 drop-shadow">
-																									{project.description}
+																									{project.subtitle}
 																								</p>
 																							</div>
 																						</div>

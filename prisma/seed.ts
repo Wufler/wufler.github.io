@@ -6,8 +6,9 @@ async function main() {
         data: [
             {
                 title: 'ZeroNetwork',
+                subtitle: 'Minecraft Server',
                 description: 'Minecraft Server',
-                img: 'https://wolfey.s-ul.eu/oTDF5P9b',
+                images: ['https://wolfey.s-ul.eu/oTDF5P9b', 'https://wolfey.s-ul.eu/oTDF5P9b'],
                 href: 'https://zeronetwork.wolfey.me',
                 category: '2025',
                 visible: true,
@@ -16,8 +17,9 @@ async function main() {
             },
             {
                 title: 'ZeroNetwork',
+                subtitle: 'Minecraft Server',
                 description: 'Long text here to test because this is a long text',
-                img: 'https://wolfey.s-ul.eu/oTDF5P9b',
+                images: ['https://wolfey.s-ul.eu/oTDF5P9b'],
                 href: 'https://zeronetwork.wolfey.me',
                 category: '2025',
                 visible: true,
@@ -26,8 +28,9 @@ async function main() {
             },
             {
                 title: 'Free Games',
+                subtitle: 'Free Epic Games',
                 description: 'Free Epic Games',
-                img: 'https://wolfey.s-ul.eu/MdoL9N34',
+                images: ['https://wolfey.s-ul.eu/MdoL9N34'],
                 href: 'https://egfreegames.vercel.app/',
                 category: '2024',
                 visible: true,

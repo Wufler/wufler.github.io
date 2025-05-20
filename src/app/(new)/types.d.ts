@@ -1,9 +1,10 @@
 type Project = {
     id: number
     title: string
-    description: string
-    href: string
-    img: string
+    subtitle: string | null
+    description: string | null
+    href: string | null
+    images: string[]
     status: string[]
     tags: string[]
     visible: boolean
@@ -15,8 +16,8 @@ type Project = {
 type Build = {
     id: number
     title: string
-    description: string
-    img?: string
+    description: string | null
+    img: string | null
     status: string[]
     tags: string[]
     visible: boolean
