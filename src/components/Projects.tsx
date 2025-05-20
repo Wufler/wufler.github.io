@@ -75,7 +75,7 @@ export default function Projects({
 					<div
 						className={`grid ${
 							localFullscreen
-								? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+								? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
 								: 'grid-cols-1'
 						} gap-6 pb-6`}
 					>
@@ -100,7 +100,7 @@ export default function Projects({
 									onClick={handleProjectClick}
 									onMouseEnter={() => playMoveSound()}
 								>
-									<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-56">
+									<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-48 sm:h-56 xl:h-56">
 										<Image
 											src={project.images[0]}
 											alt={project.title}
@@ -295,7 +295,7 @@ export default function Projects({
 																		<div
 																			className={`grid ${
 																				localFullscreen
-																					? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+																					? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
 																					: 'grid-cols-1'
 																			} gap-6 pb-6`}
 																		>
@@ -320,7 +320,7 @@ export default function Projects({
 																						onClick={handleProjectClick}
 																						onMouseEnter={() => playMoveSound()}
 																					>
-																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-64">
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-48 sm:h-56 xl:h-56">
 																							<Image
 																								src={project.images[0]}
 																								alt={project.title}
@@ -527,7 +527,7 @@ export default function Projects({
 																		<div
 																			className={`grid ${
 																				localFullscreen
-																					? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+																					? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
 																					: 'grid-cols-1'
 																			} gap-6 pb-6`}
 																		>
@@ -552,7 +552,7 @@ export default function Projects({
 																						onClick={handleProjectClick}
 																						onMouseEnter={() => playMoveSound()}
 																					>
-																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-48">
+																						<div className="relative rounded-xl overflow-hidden group shadow-lg hover:scale-102 transition-transform duration-200 h-48 sm:h-56 xl:h-56">
 																							<Image
 																								src={project.images[0]}
 																								alt={project.title}

@@ -126,7 +126,7 @@ export default function About({
 
 					<div className="space-y-2">
 						<h3 className="text-[#dfc931] font-bold text-xl">Contact</h3>
-						<div className="grid grid-cols-2 gap-2">
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
 							<a
 								href="mailto:hi@wolfey.me"
 								className="block"
@@ -166,7 +166,7 @@ export default function About({
 					<div
 						className={`grid ${
 							localFullscreen
-								? 'lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2'
+								? 'lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-2'
 								: 'grid-cols-3'
 						} gap-2`}
 					>
