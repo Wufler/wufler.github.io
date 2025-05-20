@@ -190,7 +190,7 @@ export default function Menu({
 				otherMenuOpen={showMenu}
 				isFullscreen={isFullscreen}
 			>
-				<div className="transition-all duration-300 h-[80vh]">
+				<div className="transition-all duration-300">
 					<Projects
 						onClose={isMobile ? toggleProjects : undefined}
 						projects={projects}
@@ -207,7 +207,7 @@ export default function Menu({
 				otherMenuOpen={isMenuOpen}
 				isFullscreen={isAboutFullscreen}
 			>
-				<div className="transition-all duration-300 h-[80vh]">
+				<div className="transition-all duration-300">
 					<About
 						onClose={isMobile ? toggleAbout : undefined}
 						builds={builds}

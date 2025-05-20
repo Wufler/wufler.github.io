@@ -1,9 +1,9 @@
-type Item = {
+export type Project = {
     id: number
     title: string
-    description: string
-    href: string
-    img: string
+    subtitle: string | null
+    href: string | null
+    images: string[]
     status: string[]
     tags: string[]
     visible: boolean

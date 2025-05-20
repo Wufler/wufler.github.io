@@ -12,6 +12,7 @@ import {
 import { ClipboardCheckIcon, LinkIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import React from 'react'
+import { Project } from '../types'
 
 export default function Projects({ projects }: { projects: Project[] }) {
 	const copy = async (href: string) => {
@@ -32,7 +33,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
 	}
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 pb-4 pt-32 sm:pt-36 md:pb-0 source overflow-y-auto overflow-x-hidden xl:px-4">
-			{projects.map((project: Item, index: number) => (
+			{projects.map((project: Project, index: number) => (
 				<React.Fragment key={project.id}>
 					{!index || project.category !== projects[index - 1].category ? (
 						<div className="col-span-1 lg:col-span-2 2xl:col-span-3 sm:px-6 2xl:px-2 px-6">
@@ -78,13 +79,13 @@ export default function Projects({ projects }: { projects: Project[] }) {
 										addSuffix: true,
 									})}
 								</time>
-								<p>{project.description}</p>
+								<p>{project.subtitle}</p>
 							</div>
-							<Link href={project.href} target="_blank">
+							<Link href={project.href || ''} target="_blank">
 								<ContextMenu>
 									<ContextMenuTrigger>
 										<Image
-											src={project.img}
+											src={project.images[0]}
 											height={854}
 											width={480}
 											alt={project.title}
@@ -93,7 +94,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
 									</ContextMenuTrigger>
 									<ContextMenuContent>
 										<ContextMenuItem
-											onClick={() => copy(project.href)}
+											onClick={() => copy(project.href || '')}
 											className="gap-x-1"
 										>
 											<LinkIcon className="size-4" />
